@@ -1,19 +1,23 @@
-<section id="metrics">
-  <img [src]="portraitUrl" alt="Ice Rider Calyrex portrait" width="300" height="300" />
+<img src="poke/ditto2.png" class="ditto-loader" />
 
-  <div id="title-and-slogan">
-    <h2>{{ pokemon().name }}</h2>
-    <p>{{ pokemon().slogan }}</p>
-    <p>Operating margin: {{ pokemon().operatingMarginPercent }}%</p>
-    <p>
-      Stock price: {{ pokemon().stockPricePokeDollars
-      }}<img src="poke-dollar-v2.webp" width="12px" />
-    </p>
-    <p>Total shares: {{ pokemon().totalShares }}</p>
-    <p>Available shares: {{ pokemon().availableShares }}</p>
-    <p>
-      Market cap: {{ pokemon().marketCapPokeDollars | currency: "" : "" : "1.0-0"
-      }}<img src="poke-dollar-v2.webp" width="12px" />
-    </p>
-  </div>
-</section>
+@if (!isloading()) {
+  <section id="metrics">
+    <img [src]="portraitUrl" alt="Ice Rider Calyrex portrait" width="300" height="300" />
+
+    <div id="title-and-slogan">
+      <h2>{{ pokemon().name }}</h2>
+      <p>{{ pokemon().slogan }}</p>
+      <p>Operating margin: {{ pokemon().operatingMarginPercent }}%</p>
+      <p>
+        Stock price: {{ pokemon().stockPricePokeDollars
+        }}<img src="poke-dollar-v2.webp" width="12px" />
+      </p>
+      <p>Total shares: {{ pokemon().totalShares }}</p>
+      <p>Available shares: {{ pokemon().availableShares }}</p>
+      <p>
+        Market cap: {{ pokemon().marketCapPokeDollars | currency: "" : "" : "1.0-0"
+        }}<img src="poke-dollar-v2.webp" width="12px" />
+      </p>
+    </div>
+  </section>
+}

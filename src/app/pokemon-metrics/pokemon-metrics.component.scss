@@ -3,3 +3,20 @@
   justify-content: left;
   flex-direction: row;
 }
+
+.ditto-loader {
+  width: 100px; // Adjust the size as needed
+  height: 100px; // Adjust the size as needed
+  background: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

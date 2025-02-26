@@ -22,7 +22,7 @@ export class PokemonMetricsComponent implements OnInit {
     marketCapPokeDollars: 0,
   });
 
-  loading = signal(true);
+  isloading = signal(true);
 
   constructor(private pokemonService: PokemonService) {}
 
@@ -35,7 +35,7 @@ export class PokemonMetricsComponent implements OnInit {
       .pipe(delay(1000))
       .subscribe((pokemon) => {
         this.pokemon.set(pokemon);
-        this.loading.set(false);
+        this.isloading.set(false);
       });
   }
 
