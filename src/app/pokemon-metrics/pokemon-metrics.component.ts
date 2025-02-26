@@ -2,10 +2,11 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { PokemonService, Pokemon } from '../pokemon.service';
 import { delay } from 'rxjs';
+import { LoaderComponent } from '../shared/components/loader/loader.component';
 
 @Component({
   selector: 'app-pokemon-metrics',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, LoaderComponent],
   templateUrl: './pokemon-metrics.component.html',
   styleUrl: './pokemon-metrics.component.scss',
 })
@@ -32,7 +33,7 @@ export class PokemonMetricsComponent implements OnInit {
         number: 898,
         form: 'ice-rider',
       })
-      .pipe(delay(1000))
+      .pipe(delay(2000))
       .subscribe((pokemon) => {
         this.pokemon.set(pokemon);
         this.isloading.set(false);

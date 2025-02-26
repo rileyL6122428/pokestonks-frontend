@@ -1,7 +1,5 @@
-<img src="poke/ditto2.png" class="ditto-loader" />
-
-@if (!isloading()) {
-  <section id="metrics">
+<section id="metrics">
+  @if (!isloading()) {
     <img [src]="portraitUrl" alt="Ice Rider Calyrex portrait" width="300" height="300" />
 
     <div id="title-and-slogan">
@@ -19,5 +17,8 @@
         }}<img src="poke-dollar-v2.webp" width="12px" />
       </p>
     </div>
-  </section>
-}
+  } @else {
+    <!-- <img src="poke/ditto2.png" class="ditto-loader" /> -->
+    <app-loader></app-loader>
+  }
+</section>
