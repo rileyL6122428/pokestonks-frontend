@@ -7,7 +7,7 @@
       <p>{{ pokemon().slogan }}</p>
       <p>Operating margin: {{ pokemon().operatingMarginPercent }}%</p>
       <p>
-        Stock price: {{ pokemon().stockPricePokeDollars
+        Stock price: {{ pokemon().lastTradePokeDollars
         }}<img src="poke-dollar-v2.webp" width="12px" />
       </p>
       <p>Total shares: {{ pokemon().totalShares }}</p>
@@ -16,6 +16,8 @@
         Market cap: {{ pokemon().marketCapPokeDollars | currency: "" : "" : "1.0-0"
         }}<img src="poke-dollar-v2.webp" width="12px" />
       </p>
+      <p>Bid: {{ pokemon().bidPokeDollars }}<img src="poke-dollar-v2.webp" width="12px" /></p>
+      <p>Ask: {{ pokemon().askPokeDollars }}<img src="poke-dollar-v2.webp" width="12px" /></p>
     </div>
   } @else {
     <!-- <img src="poke/ditto2.png" class="ditto-loader" /> -->

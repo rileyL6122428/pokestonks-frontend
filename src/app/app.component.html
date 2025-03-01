@@ -1,3 +1,17 @@
 <h1>Pokestonks</h1>
 
+<form>
+  <input
+    type="text"
+    placeholder="Search for a Pokemon"
+    (input)="onSearchChange($any($event.target)?.value)"
+  />
+  <ul>
+    @for (pokemon of searchResults(); track pokemon.key) {
+      <li>
+        <a [routerLink]="['/pokemon', pokemon.key, 'metrics']">{{ pokemon.name }}</a>
+      </li>
+    }
+  </ul>
+</form>
 <router-outlet />

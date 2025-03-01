@@ -3,7 +3,7 @@ import { PokemonMetricsComponent } from './pokemon-metrics/pokemon-metrics.compo
 
 export const routes: Routes = [
   {
-    path: 'pokemon/:pokemonNumber/:pokemonForm/metrics',
+    path: 'pokemon/:pokemonKey/metrics',
     component: PokemonMetricsComponent,
   },
 ];
