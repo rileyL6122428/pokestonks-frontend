@@ -32,4 +32,8 @@ export class PokemonMetricsComponent {
         this.isloading.set(false);
       });
   }
+
+  get imageAlt(): string {
+    return `Portrait of ${this.pokemon().name}`;
+  }
 }

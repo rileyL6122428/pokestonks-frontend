@@ -1,6 +1,6 @@
 <section id="metrics">
   @if (!isloading()) {
-    <img [src]="portraitUrl" alt="Ice Rider Calyrex portrait" width="300" height="300" />
+    <img [src]="portraitUrl" [attr.alt]="imageAlt" width="300" height="300" />
 
     <div id="title-and-slogan">
       <h2>{{ pokemon().name }}</h2>

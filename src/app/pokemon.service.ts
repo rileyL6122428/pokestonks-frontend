@@ -63,6 +63,18 @@ export interface PokemonParams {
 
 const ALL_POKEMON: Pokemon[] = [
   new Pokemon({
+    number: 3,
+    form: 'default',
+    name: 'Venusaur',
+    slogan: 'Sleep powder giveth, and sleep powder taketh.',
+    operatingMarginPercent: 80,
+    totalShares: 1000,
+    availableShares: 200,
+    bidPokeDollars: 99,
+    askPokeDollars: 105,
+    lastTradePokeDollars: 100,
+  }),
+  new Pokemon({
     number: 898,
     form: 'ice-rider',
     name: 'Ice Rider Calyrex',
@@ -88,10 +100,10 @@ const ALL_POKEMON: Pokemon[] = [
   }),
 ];
 
-const POKEMON_BY_NUMBER_FORM: { [key: string]: Pokemon } = {
-  '898-ice-rider': ALL_POKEMON[0],
-  '898-shadow-rider': ALL_POKEMON[1],
-};
+const POKEMON_BY_NUMBER_FORM: { [key: string]: Pokemon } = {};
+ALL_POKEMON.forEach((pokemon) => {
+  POKEMON_BY_NUMBER_FORM[pokemon.key] = pokemon;
+});
 
 @Injectable({
   providedIn: 'root',
