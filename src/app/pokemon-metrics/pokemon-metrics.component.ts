@@ -1,12 +1,12 @@
-import { CurrencyPipe } from '@angular/common';
 import { Component, Input, signal } from '@angular/core';
 import { delay } from 'rxjs';
 import { Pokemon, PokemonService } from '../pokemon.service';
 import { LoaderComponent } from '../shared/components/loader/loader.component';
+import { PokeDollarsComponent } from '../shared/components/poke-dollars/poke-dollars.component';
 
 @Component({
   selector: 'app-pokemon-metrics',
-  imports: [CurrencyPipe, LoaderComponent],
+  imports: [LoaderComponent, PokeDollarsComponent],
   templateUrl: './pokemon-metrics.component.html',
   styleUrl: './pokemon-metrics.component.scss',
 })

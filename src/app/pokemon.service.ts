@@ -78,7 +78,7 @@ const ALL_POKEMON: Pokemon[] = [
     number: 898,
     form: 'shadow-rider',
     name: 'Shadow Rider Calyrex',
-    slogan: 'Eclipsing Mewtwo since day one.',
+    slogan: 'Eclipsing Mewtwo since October 23rd, 2020.',
     operatingMarginPercent: 80,
     totalShares: 1000,
     availableShares: 200,
@@ -97,8 +97,6 @@ const POKEMON_BY_NUMBER_FORM: { [key: string]: Pokemon } = {
   providedIn: 'root',
 })
 export class PokemonService {
-  constructor() {}
-
   getPokemon(params: { key: string }): Observable<Pokemon> {
     return of(POKEMON_BY_NUMBER_FORM[params.key]);
   }

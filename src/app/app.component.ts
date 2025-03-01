@@ -15,7 +15,6 @@ export class AppComponent {
 
   searchUpdate = new BehaviorSubject<string>('');
   private searchSub: Subscription = new Subscription();
-  searchText = '';
   searchResults = signal<Pokemon[]>([]);
 
   constructor(private pokemonService: PokemonService) {}
