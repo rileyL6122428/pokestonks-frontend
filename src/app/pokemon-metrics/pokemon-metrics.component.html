@@ -6,18 +6,35 @@
       <h2>{{ pokemon().name }}</h2>
       <p>{{ pokemon().slogan }}</p>
       <p>Operating margin: {{ pokemon().operatingMarginPercent }}%</p>
-      <p>Stock price: <app-poke-dollars [amount]="pokemon().lastTradePokeDollars" /></p>
-      <!-- <p>
-        Stock price: {{ pokemon().lastTradePokeDollars
-        }}<img src="poke-dollar-v2.webp" width="12px" />
-      </p> -->
+      <p>Last: <app-poke-dollars [amount]="pokemon().lastTradePokeDollars" /></p>
+      <p>Bid: <app-poke-dollars [amount]="pokemon().bidPokeDollars" /></p>
+      <p>Ask: <app-poke-dollars [amount]="pokemon().askPokeDollars" /></p>
       <p>Total shares: {{ pokemon().totalShares }}</p>
       <p>Available shares: {{ pokemon().availableShares }}</p>
       <p>Market cap: <app-poke-dollars [amount]="pokemon().marketCapPokeDollars" /></p>
-      <p>Bid: <app-poke-dollars [amount]="pokemon().bidPokeDollars" /></p>
-      <p>Ask: <app-poke-dollars [amount]="pokemon().askPokeDollars" /></p>
     </div>
   } @else {
     <app-loader></app-loader>
   }
 </section>
+
+@if (!isloading()) {
+  <section id="current-transactions">
+    <div id="start-transaction">
+      @if (!bid()) {
+        <button (click)="startBid()">Bid</button>
+      }
+      @if (!bid() && pokemon().availableShares > 0) {
+        <button (click)="startAsk()">Ask</button>
+      }
+    </div>
+
+    @if (bid()) {
+      <div>
+        <h3>Your Current Bid</h3>
+        <p>Price per share: <app-poke-dollars [amount]="bid()!.pricePerSharePokeDollars" /></p>
+        <p>Shares: {{ bid()?.shareAmount }}</p>
+      </div>
+    }
+  </section>
+}

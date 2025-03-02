@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, delay, tap } from 'rxjs';
 
 export class Pokemon {
   number: number;
@@ -66,7 +66,7 @@ const ALL_POKEMON: Pokemon[] = [
     number: 3,
     form: 'default',
     name: 'Venusaur',
-    slogan: 'Sleep powder giveth, and sleep powder taketh.',
+    slogan: 'Sleep powder giveth, sleep powder taketh.',
     operatingMarginPercent: 80,
     totalShares: 1000,
     availableShares: 200,
@@ -110,7 +110,7 @@ ALL_POKEMON.forEach((pokemon) => {
 })
 export class PokemonService {
   getPokemon(params: { key: string }): Observable<Pokemon> {
-    return of(POKEMON_BY_NUMBER_FORM[params.key]);
+    return of(POKEMON_BY_NUMBER_FORM[params.key]).pipe(delay(1000), tap(console.log));
   }
 
   searchPokemon(query: string): Observable<Pokemon[]> {
@@ -124,6 +124,6 @@ export class PokemonService {
         0,
         5,
       ),
-    );
+    ).pipe(delay(1000));
   }
 }

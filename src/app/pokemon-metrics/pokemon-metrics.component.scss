@@ -1,6 +1,16 @@
+section {
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+}
+
 #metrics {
   display: flex;
   justify-content: left;
   flex-direction: row;
-  border: 1px solid #e0e0e0;
+}
+
+#start-transaction {
+  button {
+    margin-left: 10px;
+  }
 }

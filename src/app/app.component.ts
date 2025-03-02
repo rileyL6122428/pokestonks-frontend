@@ -2,7 +2,8 @@ import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { BehaviorSubject, debounceTime, mergeMap, Subscription } from 'rxjs';
-import { Pokemon, PokemonService } from './pokemon.service';
+import { Pokemon, PokemonService } from './shared/services/pokemon.service';
+import { User, UserService } from './shared/services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +17,12 @@ export class AppComponent {
   searchUpdate = new BehaviorSubject<string>('');
   private searchSub: Subscription = new Subscription();
   searchResults = signal<Pokemon[]>([]);
+  currentUser = signal<User>(new User(''));
 
-  constructor(private pokemonService: PokemonService) {}
+  constructor(
+    private pokemonService: PokemonService,
+    private userService: UserService,
+  ) {}
 
   ngOnInit() {
     this.searchSub = this.searchUpdate
@@ -26,6 +31,10 @@ export class AppComponent {
         mergeMap((searchText) => this.pokemonService.searchPokemon(searchText)),
       )
       .subscribe((searchResults) => this.searchResults.set(searchResults));
+
+    this.userService.getCurrentUser().subscribe((currentUser) => {
+      this.currentUser.set(currentUser);
+    });
   }
 
   onSearchChange(searchText: string) {
