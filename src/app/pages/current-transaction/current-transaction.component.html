@@ -1,0 +1,27 @@
+<section id="current-transactions">
+  @if (!isloading()) {
+    @if (!pendingTransaction()) {
+      <div id="start-transaction">
+        <button (click)="startBid()">Bid</button>
+        <button (click)="startAsk()">Ask</button>
+      </div>
+    }
+
+    <div id="current-transaction">
+      @if (pendingTransaction()) {
+        <h3>Your Current {{ pendingTransaction()!.type | titlecase }}</h3>
+        <p>
+          Price per share:
+          <app-poke-dollars [amount]="pendingTransaction()!.pricePerSharePokeDollars" />
+        </p>
+        <p>Shares: {{ pendingTransaction()?.shareAmount }}</p>
+        <p>
+          Total cost: <app-poke-dollars [amount]="pendingTransaction()!.totalCostPokeDollars" />
+        </p>
+        <button (click)="cancelTransaction()">Cancel</button>
+      }
+    </div>
+  } @else {
+    <app-loader></app-loader>
+  }
+</section>

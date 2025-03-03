@@ -1,10 +1,10 @@
 import { Component, Input, signal } from '@angular/core';
-import { Pokemon, PokemonService } from '../shared/services/pokemon.service';
-import { LoaderComponent } from '../shared/components/loader/loader.component';
-import { PokeDollarsComponent } from '../shared/components/poke-dollars/poke-dollars.component';
+import { Pokemon, PokemonService } from '../../shared/services/pokemon.service';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
+import { PokeDollarsComponent } from '../../shared/components/poke-dollars/poke-dollars.component';
 import { mergeMap, zip } from 'rxjs';
-import { User, UserService } from '../shared/services/user.service';
-import { Ask, Bid, TransactionService } from '../shared/services/transaction.service';
+import { User, UserService } from '../../shared/services/user.service';
+import { Ask, Bid, TransactionService } from '../../shared/services/transaction.service';
 
 @Component({
   selector: 'app-pokemon-metrics',

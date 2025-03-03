@@ -1,17 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, delay, tap } from 'rxjs';
 
-export class Bid {
+export type StockTransactionType = 'bid' | 'ask';
+export type StockTransactionStatus = 'pending' | 'completed' | 'cancelled';
+
+export class StockTransaction {
   pokemonKey: string;
   shareAmount: number;
   pricePerSharePokeDollars: number;
   ownerUsername: string;
+  type: 'bid' | 'ask';
+  status: 'pending' | 'completed' | 'cancelled';
 
-  constructor(params: BidParams) {
+  constructor(params: StockTransactionParams) {
     this.pokemonKey = params.pokemonKey;
     this.shareAmount = params.shareAmount;
     this.pricePerSharePokeDollars = params.pricePerSharePokeDollars;
     this.ownerUsername = params.ownerUsername;
+    this.type = params.type;
+    this.status = params.status;
   }
 
   get totalCostPokeDollars() {
@@ -19,105 +26,75 @@ export class Bid {
   }
 }
 
-export interface BidParams {
+export interface StockTransactionParams {
   pokemonKey: string;
   shareAmount: number;
   pricePerSharePokeDollars: number;
   ownerUsername: string;
+  type: 'bid' | 'ask';
+  status: 'pending' | 'completed' | 'cancelled';
 }
 
-const SEED_BIDS: Bid[] = [
-  new Bid({
+const SEED_STOCK_TRANSACTIONS: StockTransaction[] = [
+  new StockTransaction({
     pokemonKey: '3-default',
     shareAmount: 100,
     pricePerSharePokeDollars: 100,
     ownerUsername: 'red',
+    type: 'bid',
+    status: 'pending',
   }),
-];
-
-const BIDS_BY_OWNER_THEN_POKEMON_KEY: { [username: string]: { [key: string]: Bid } } = {};
-SEED_BIDS.forEach((bid) => {
-  if (!BIDS_BY_OWNER_THEN_POKEMON_KEY[bid.ownerUsername]) {
-    BIDS_BY_OWNER_THEN_POKEMON_KEY[bid.ownerUsername] = {};
-  }
-  BIDS_BY_OWNER_THEN_POKEMON_KEY[bid.ownerUsername][bid.pokemonKey] = bid;
-});
-
-export class Ask {
-  pokemonKey: string;
-  shareAmount: number;
-  pricePerSharePokeDollars: number;
-  ownerUsername: string;
-
-  constructor(params: AskParams) {
-    this.pokemonKey = params.pokemonKey;
-    this.shareAmount = params.shareAmount;
-    this.pricePerSharePokeDollars = params.pricePerSharePokeDollars;
-    this.ownerUsername = params.ownerUsername;
-  }
-
-  get totalCostPokeDollars() {
-    return this.shareAmount * this.pricePerSharePokeDollars;
-  }
-}
-
-export interface AskParams {
-  pokemonKey: string;
-  shareAmount: number;
-  pricePerSharePokeDollars: number;
-  ownerUsername: string;
-}
-
-const SEED_ASKS: Ask[] = [
-  new Ask({
+  new StockTransaction({
     pokemonKey: '898-ice-rider',
     shareAmount: 100,
     pricePerSharePokeDollars: 100,
     ownerUsername: 'red',
+    type: 'ask',
+    status: 'pending',
   }),
 ];
 
-const ASKS_BY_OWNER_THEN_POKEMON_KEY: { [username: string]: { [key: string]: Bid } } = {};
-SEED_ASKS.forEach((ask) => {
-  if (!ASKS_BY_OWNER_THEN_POKEMON_KEY[ask.ownerUsername]) {
-    ASKS_BY_OWNER_THEN_POKEMON_KEY[ask.ownerUsername] = {};
+const TRANSACTIONS_BY_OWNER_THEN_POKEMON_KEY: {
+  [username: string]: { [key: string]: StockTransaction[] };
+} = {};
+SEED_STOCK_TRANSACTIONS.forEach((transaction) => {
+  if (!TRANSACTIONS_BY_OWNER_THEN_POKEMON_KEY[transaction.ownerUsername]) {
+    TRANSACTIONS_BY_OWNER_THEN_POKEMON_KEY[transaction.ownerUsername] = {};
   }
-  ASKS_BY_OWNER_THEN_POKEMON_KEY[ask.ownerUsername][ask.pokemonKey] = ask;
+  if (!TRANSACTIONS_BY_OWNER_THEN_POKEMON_KEY[transaction.ownerUsername][transaction.pokemonKey]) {
+    TRANSACTIONS_BY_OWNER_THEN_POKEMON_KEY[transaction.ownerUsername][transaction.pokemonKey] = [];
+  }
+  TRANSACTIONS_BY_OWNER_THEN_POKEMON_KEY[transaction.ownerUsername][transaction.pokemonKey].push(
+    transaction,
+  );
 });
 
 @Injectable({
   providedIn: 'root',
 })
 export class TransactionService {
-  constructor() {}
-
-  getBid(ownerUsername: string, pokemonKey: string): Observable<Bid | null> {
-    return of(BIDS_BY_OWNER_THEN_POKEMON_KEY[ownerUsername]?.[pokemonKey] ?? null).pipe(
+  getTransactions(
+    ownerUsername: string,
+    pokemonKey: string,
+    status: StockTransactionStatus,
+  ): Observable<StockTransaction[]> {
+    const matched = TRANSACTIONS_BY_OWNER_THEN_POKEMON_KEY[ownerUsername]?.[pokemonKey]?.filter(
+      (transaction) => transaction.status === status,
+    );
+    return of(matched ?? []).pipe(
       delay(1000),
-      tap((bid) => console.log('Retrieved bid', bid)),
+      tap((transaction) => console.log('Retrieved transaction', transaction)),
     );
   }
 
-  cancelBid(bid: Bid): Observable<boolean> {
-    const foundBid = BIDS_BY_OWNER_THEN_POKEMON_KEY[bid.ownerUsername]?.[bid.pokemonKey];
-    if (foundBid) {
-      delete BIDS_BY_OWNER_THEN_POKEMON_KEY[bid.ownerUsername][bid.pokemonKey];
+  cancelTransaction(transaction: StockTransaction): Observable<boolean> {
+    const foundTransaction =
+      TRANSACTIONS_BY_OWNER_THEN_POKEMON_KEY[transaction.ownerUsername]?.[transaction.pokemonKey];
+    if (foundTransaction) {
+      delete TRANSACTIONS_BY_OWNER_THEN_POKEMON_KEY[transaction.ownerUsername][
+        transaction.pokemonKey
+      ];
     }
-    return of(!!foundBid).pipe(delay(1000));
-  }
-
-  getAsk(ownerUsername: string, pokemonKey: string): Observable<Ask | null> {
-    return of(ASKS_BY_OWNER_THEN_POKEMON_KEY[ownerUsername]?.[pokemonKey] ?? null).pipe(
-      delay(1000),
-      tap((ask) => console.log('Retrieved ask', ask)),
-    );
-  }
-
-  cancelAsk(ask: Ask): Observable<boolean> {
-    const foundAsk = ASKS_BY_OWNER_THEN_POKEMON_KEY[ask.ownerUsername]?.[ask.pokemonKey];
-    if (foundAsk) {
-      delete ASKS_BY_OWNER_THEN_POKEMON_KEY[ask.ownerUsername][ask.pokemonKey];
-    }
-    return of(!!foundAsk).pipe(delay(1000));
+    return of(!!foundTransaction).pipe(delay(1000));
   }
 }
