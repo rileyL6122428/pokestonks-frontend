@@ -20,14 +20,12 @@
 
 @if (!isloading()) {
   <section id="current-transactions">
-    <div id="start-transaction">
-      @if (!bid()) {
+    @if (!bid() && !ask()) {
+      <div id="start-transaction">
         <button (click)="startBid()">Bid</button>
-      }
-      @if (!bid() && pokemon().availableShares > 0) {
         <button (click)="startAsk()">Ask</button>
-      }
-    </div>
+      </div>
+    }
 
     <div id="current-bid">
       @if (!cancellingBid() && bid()) {
@@ -38,6 +36,18 @@
         <button (click)="cancelBid()">Cancel</button>
       }
       @if (cancellingBid() && bid()) {
+        <app-loader></app-loader>
+      }
+    </div>
+    <div id="current-ask">
+      @if (!cancellingAsk() && ask()) {
+        <h3>Your Current Ask</h3>
+        <p>Price per share: <app-poke-dollars [amount]="ask()!.pricePerSharePokeDollars" /></p>
+        <p>Shares: {{ ask()?.shareAmount }}</p>
+        <p>Total cost: <app-poke-dollars [amount]="ask()!.totalCostPokeDollars" /></p>
+        <button (click)="cancelAsk()">Cancel</button>
+      }
+      @if (cancellingAsk() && ask()) {
         <app-loader></app-loader>
       }
     </div>

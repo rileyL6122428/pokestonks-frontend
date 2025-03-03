@@ -46,6 +46,10 @@ export class Pokemon {
   get key(): string {
     return `${this.number}-${this.form}`;
   }
+
+  get areSharesAvailable(): boolean {
+    return this.availableShares > 0;
+  }
 }
 
 export interface PokemonParams {
@@ -61,7 +65,7 @@ export interface PokemonParams {
   lastTradePokeDollars: number;
 }
 
-const ALL_POKEMON: Pokemon[] = [
+const SEED_POKEMON: Pokemon[] = [
   new Pokemon({
     number: 3,
     form: 'default',
@@ -101,7 +105,7 @@ const ALL_POKEMON: Pokemon[] = [
 ];
 
 const POKEMON_BY_NUMBER_FORM: { [key: string]: Pokemon } = {};
-ALL_POKEMON.forEach((pokemon) => {
+SEED_POKEMON.forEach((pokemon) => {
   POKEMON_BY_NUMBER_FORM[pokemon.key] = pokemon;
 });
 
@@ -120,7 +124,7 @@ export class PokemonService {
 
     const lowerCaseQuery = query.toLowerCase();
     return of(
-      ALL_POKEMON.filter((pokemon) => pokemon.name.toLowerCase().includes(lowerCaseQuery)).slice(
+      SEED_POKEMON.filter((pokemon) => pokemon.name.toLowerCase().includes(lowerCaseQuery)).slice(
         0,
         5,
       ),

@@ -2,9 +2,9 @@ import { Component, Input, signal } from '@angular/core';
 import { Pokemon, PokemonService } from '../shared/services/pokemon.service';
 import { LoaderComponent } from '../shared/components/loader/loader.component';
 import { PokeDollarsComponent } from '../shared/components/poke-dollars/poke-dollars.component';
-import { forkJoin, mergeMap, zip } from 'rxjs';
+import { mergeMap, zip } from 'rxjs';
 import { User, UserService } from '../shared/services/user.service';
-import { Bid, TransactionService } from '../shared/services/transaction.service';
+import { Ask, Bid, TransactionService } from '../shared/services/transaction.service';
 
 @Component({
   selector: 'app-pokemon-metrics',
@@ -14,8 +14,12 @@ import { Bid, TransactionService } from '../shared/services/transaction.service'
 })
 export class PokemonMetricsComponent {
   pokemon = signal<Pokemon>(new Pokemon());
+
   bid = signal<Bid | null>(null);
   cancellingBid = signal(false);
+
+  ask = signal<Ask | null>(null);
+  cancellingAsk = signal(false);
 
   isloading = signal(true);
 
@@ -35,16 +39,16 @@ export class PokemonMetricsComponent {
     const pokemon$ = this.pokemonService.getPokemon({ key });
     const user$ = this.userService.getCurrentUser();
     const bid$ = user$.pipe(
-      mergeMap((user: User) => {
-        console.log('USER RETRIEVED', user);
-        return this.transactionService.getBid(user.username, key);
-      }),
+      mergeMap((user: User) => this.transactionService.getBid(user.username, key)),
+    );
+    const ask$ = user$.pipe(
+      mergeMap((user: User) => this.transactionService.getAsk(user.username, key)),
     );
 
-    zip(pokemon$, bid$).subscribe(([pokemon, bid]) => {
-      console.log('FETCHED THE STUFF', pokemon, bid);
+    zip(pokemon$, bid$, ask$).subscribe(([pokemon, bid, ask]) => {
       this.pokemon.set(pokemon);
       this.bid.set(bid);
+      this.ask.set(ask);
       this.isloading.set(false);
     });
   }
@@ -67,7 +71,6 @@ export class PokemonMetricsComponent {
     this.transactionService.cancelBid(bid).subscribe({
       next: (wasSuccessful) => {
         if (wasSuccessful) {
-          console.log(`Bid cancelled for ${this.pokemon().name}`);
           this.bid.set(null);
         }
       },
@@ -79,5 +82,24 @@ export class PokemonMetricsComponent {
 
   startAsk() {
     console.log(`Ask started for ${this.pokemon().name}`);
+  }
+
+  cancelAsk() {
+    const ask = this.ask();
+    if (!ask) {
+      return;
+    }
+
+    this.cancellingAsk.set(true);
+    this.transactionService.cancelAsk(ask).subscribe({
+      next: (wasSuccessful) => {
+        if (wasSuccessful) {
+          this.ask.set(null);
+        }
+      },
+      complete: () => {
+        this.cancellingAsk.set(false);
+      },
+    });
   }
 }
