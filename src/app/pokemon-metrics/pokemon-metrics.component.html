@@ -29,12 +29,17 @@
       }
     </div>
 
-    @if (bid()) {
-      <div>
+    <div id="current-bid">
+      @if (!cancellingBid() && bid()) {
         <h3>Your Current Bid</h3>
         <p>Price per share: <app-poke-dollars [amount]="bid()!.pricePerSharePokeDollars" /></p>
         <p>Shares: {{ bid()?.shareAmount }}</p>
-      </div>
-    }
+        <p>Total cost: <app-poke-dollars [amount]="bid()!.totalCostPokeDollars" /></p>
+        <button (click)="cancelBid()">Cancel</button>
+      }
+      @if (cancellingBid() && bid()) {
+        <app-loader></app-loader>
+      }
+    </div>
   </section>
 }

@@ -9,6 +9,14 @@ section {
   flex-direction: row;
 }
 
+#current-transactions {
+  app-loader {
+    display: block;
+    height: 200px;
+    width: 200px;
+  }
+}
+
 #start-transaction {
   button {
     margin-left: 10px;

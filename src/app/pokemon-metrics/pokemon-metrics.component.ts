@@ -15,6 +15,7 @@ import { Bid, TransactionService } from '../shared/services/transaction.service'
 export class PokemonMetricsComponent {
   pokemon = signal<Pokemon>(new Pokemon());
   bid = signal<Bid | null>(null);
+  cancellingBid = signal(false);
 
   isloading = signal(true);
 
@@ -54,6 +55,26 @@ export class PokemonMetricsComponent {
 
   startBid() {
     console.log(`Bid started for ${this.pokemon().name}`);
+  }
+
+  cancelBid() {
+    const bid = this.bid();
+    if (!bid) {
+      return;
+    }
+
+    this.cancellingBid.set(true);
+    this.transactionService.cancelBid(bid).subscribe({
+      next: (wasSuccessful) => {
+        if (wasSuccessful) {
+          console.log(`Bid cancelled for ${this.pokemon().name}`);
+          this.bid.set(null);
+        }
+      },
+      complete: () => {
+        this.cancellingBid.set(false);
+      },
+    });
   }
 
   startAsk() {
