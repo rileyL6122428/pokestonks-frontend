@@ -18,4 +18,7 @@
   }
 </section>
 
-<router-outlet />
+<div id="pokemon-position-container">
+  <app-pending-transaction [pokemonKey]="pokemonKey()"></app-pending-transaction>
+  <app-pokemon-position [pokemonKey]="pokemonKey()"></app-pokemon-position>
+</div>

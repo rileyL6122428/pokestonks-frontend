@@ -9,3 +9,8 @@ app-loader {
   height: 275px;
   width: 275px;
 }
+
+#pokemon-position-container {
+  display: flex;
+  flex-direction: row;
+}

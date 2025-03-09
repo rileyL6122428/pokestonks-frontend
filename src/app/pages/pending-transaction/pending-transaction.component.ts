@@ -8,12 +8,12 @@ import { PokeDollarsComponent } from '../../shared/components/poke-dollars/poke-
 import { TitleCasePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-current-transaction',
+  selector: 'app-pending-transaction',
   imports: [LoaderComponent, PokeDollarsComponent, TitleCasePipe],
-  templateUrl: './current-transaction.component.html',
-  styleUrl: './current-transaction.component.scss',
+  templateUrl: './pending-transaction.component.html',
+  styleUrl: './pending-transaction.component.scss',
 })
-export class CurrentTransactionComponent {
+export class PendingTransactionComponent {
   pokemon = signal<Pokemon>(new Pokemon());
 
   pendingTransaction = signal<StockTransaction | null>(null);
@@ -27,7 +27,11 @@ export class CurrentTransactionComponent {
   ) {}
 
   @Input()
-  set pokemonKey(key: string) {
+  set pokemonKey(key: string | undefined) {
+    if (!key) {
+      return;
+    }
+
     this.isloading.set(true);
     const pokemon$ = this.pokemonService.getPokemon({ key });
     const user$ = this.userService.getCurrentUser();

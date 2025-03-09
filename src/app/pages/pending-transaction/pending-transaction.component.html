@@ -2,6 +2,7 @@
   @if (!isloading()) {
     @if (!pendingTransaction()) {
       <div id="start-transaction">
+        <h3>Start a transaction</h3>
         <button (click)="startBid()">Bid</button>
         <button (click)="startAsk()">Ask</button>
       </div>

@@ -1,0 +1,14 @@
+<section id="position">
+  @if (loading()) {
+    <app-loader />
+  }
+  @if (!loading() && position()) {
+    <h3>Your Current Position</h3>
+    <p>Owned shares: {{ position()?.ownedSharesCount }}</p>
+    @if (position()!.ownedSharesCount > 0) {
+      <p>Valuation: <app-poke-dollars [amount]="valuation" /></p>
+      <p>Portfolio shares percentage: {{ position()?.portfolioSharesPercentage }}%</p>
+      <p>Portfolio valuation percentage: {{ position()?.portfolioValuePercentage }}%</p>
+    }
+  }
+</section>
