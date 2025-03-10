@@ -1,0 +1,31 @@
+<section>
+  <h2>Asks for {{ pokemon().name }}</h2>
+  @if (loading()) {
+    <app-loader></app-loader>
+  } @else {
+    <div>
+      <label for="sort-by">Sort by</label>
+      <select
+        [ngModel]="sortBy"
+        (ngModelChange)="sortBy = $event; sortAsks()"
+        name="sort-by"
+        id="sort-by"
+      >
+        <option [value]="'sharePriceDesc'">Share Price</option>
+        <option [value]="'shareVolumeDesc'">Share Volume Desc</option>
+        <option [value]="'shareVolumeAsc'">Share Volume Asc</option>
+      </select>
+    </div>
+    <ul>
+      @for (ask of asks(); track ask.ownerUsername) {
+        <li class="ask-card">
+          <p>Price per share: <app-poke-dollars [amount]="ask.sharePricePokeDollars" /></p>
+          <p>Total shares: {{ ask.shareCount }}</p>
+          <p>Total cost: <app-poke-dollars [amount]="ask.totalCostPokeDollars" /></p>
+          <p>Owner: {{ ask.ownerUsername }}</p>
+          <button>Buy</button>
+        </li>
+      }
+    </ul>
+  }
+</section>

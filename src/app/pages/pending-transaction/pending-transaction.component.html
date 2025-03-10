@@ -3,8 +3,8 @@
     @if (!pendingTransaction()) {
       <div id="start-transaction">
         <h3>Start a transaction</h3>
-        <button (click)="startBid()">Bid</button>
-        <button (click)="startAsk()">Ask</button>
+        <button (click)="gotoBuy()">Buy</button>
+        <button (click)="gotoSell()">Sell</button>
       </div>
     }
 
@@ -13,9 +13,9 @@
         <h3>Your Current {{ pendingTransaction()!.type | titlecase }}</h3>
         <p>
           Price per share:
-          <app-poke-dollars [amount]="pendingTransaction()!.pricePerSharePokeDollars" />
+          <app-poke-dollars [amount]="pendingTransaction()!.sharePricePokeDollars" />
         </p>
-        <p>Shares: {{ pendingTransaction()?.shareAmount }}</p>
+        <p>Shares: {{ pendingTransaction()?.shareCount }}</p>
         <p>
           Total cost: <app-poke-dollars [amount]="pendingTransaction()!.totalCostPokeDollars" />
         </p>

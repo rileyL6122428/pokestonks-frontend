@@ -17,7 +17,7 @@ export class Pokemon {
     params: PokemonParams = {
       number: 0,
       form: '',
-      name: '',
+      name: '...',
       slogan: '',
       operatingMarginPercent: 0,
       totalShares: 0,

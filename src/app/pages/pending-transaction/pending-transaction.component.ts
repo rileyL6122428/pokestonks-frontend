@@ -6,6 +6,7 @@ import { mergeMap, zip } from 'rxjs';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
 import { PokeDollarsComponent } from '../../shared/components/poke-dollars/poke-dollars.component';
 import { TitleCasePipe } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pending-transaction',
@@ -24,6 +25,7 @@ export class PendingTransactionComponent {
     private pokemonService: PokemonService,
     private userService: UserService,
     private transactionService: TransactionService,
+    private router: Router,
   ) {}
 
   @Input()
@@ -37,7 +39,7 @@ export class PendingTransactionComponent {
     const user$ = this.userService.getCurrentUser();
     const transaction$ = user$.pipe(
       mergeMap((user: User) =>
-        this.transactionService.getTransactions(user.username, key, 'pending'),
+        this.transactionService.getTransactionsForOwner(user.username, key, 'pending'),
       ),
     );
 
@@ -48,8 +50,8 @@ export class PendingTransactionComponent {
     });
   }
 
-  startBid() {
-    console.log(`Bid started for ${this.pokemon().name}`);
+  gotoBuy() {
+    this.router.navigateByUrl(`/pokemon/${this.pokemon().key}/buy`);
   }
 
   cancelTransaction() {
@@ -71,7 +73,7 @@ export class PendingTransactionComponent {
     });
   }
 
-  startAsk() {
+  gotoSell() {
     console.log(`Ask started for ${this.pokemon().name}`);
   }
 }
