@@ -3,3 +3,99 @@
   padding: 10px;
   max-width: 300px;
 }
+
+.pokedex-modal-backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+}
+
+.pokedex-modal {
+  background-color: rgba(0, 0, 0, 0);
+  width: 450px;
+  height: 340px;
+  animation:
+    fadeIn 1s forwards,
+    expandHeight 1s 1.2s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes expandHeight {
+  from {
+    height: 350px;
+  }
+  to {
+    height: 92%;
+  }
+}
+
+$modal-border-radius: 12px;
+$top-bottom-section-height: 151px;
+
+.pokedex-modal-middle-section {
+  background-color: #9ce0f0;
+  height: calc(100% - #{$top-bottom-section-height} * 2);
+  overflow-y: scroll;
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.pokedex-modal-top-section,
+.pokedex-modal-bottom-section {
+  background-color: #c00c20;
+  height: $top-bottom-section-height;
+}
+
+$black-circle-radius: 175px;
+
+.pokedex-modal-top-section {
+  border-top-left-radius: $modal-border-radius;
+  border-top-right-radius: $modal-border-radius;
+
+  .black-half-circle-top {
+    background-color: #000;
+    border-top-left-radius: $black-circle-radius;
+    border-top-right-radius: $black-circle-radius;
+    height: calc($black-circle-radius / 2);
+    width: $black-circle-radius;
+    position: relative;
+    top: calc($top-bottom-section-height - $black-circle-radius / 2);
+    left: calc(50% - #{$black-circle-radius} / 2);
+  }
+}
+
+.pokedex-modal-bottom-section {
+  border-bottom-left-radius: $modal-border-radius;
+  border-bottom-right-radius: $modal-border-radius;
+
+  .black-half-circle-bottom {
+    background-color: #000;
+    border-bottom-left-radius: $black-circle-radius;
+    border-bottom-right-radius: $black-circle-radius;
+    height: calc($black-circle-radius / 2);
+    width: $black-circle-radius;
+    position: relative;
+    top: 0;
+    left: calc(50% - #{$black-circle-radius} / 2);
+  }
+}

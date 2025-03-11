@@ -113,7 +113,7 @@ export class TransactionService {
     const matched = Object.values(TRANSACTIONS_BY_OWNER_THEN_POKEMON_KEY)
       .map((transactions) => transactions[pokemonKey])
       .flat()
-      .filter((transaction) => transaction.status === status && transaction.type === type);
+      .filter((transaction) => transaction?.status === status && transaction?.type === type);
 
     return of(matched).pipe(
       delay(1000),

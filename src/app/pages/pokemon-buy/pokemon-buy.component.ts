@@ -43,6 +43,7 @@ export class PokemonBuyComponent {
   loading = signal(true);
   asks = signal<StockTransaction[]>([]);
   sortBy: SortBy = 'sharePriceDesc';
+  selectedAsk = signal<StockTransaction | null>(null);
 
   constructor(
     private pokemonService: PokemonService,
