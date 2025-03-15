@@ -1,0 +1,16 @@
+<div class="pokedex-modal-backdrop">
+  <div
+    class="pokedex-modal"
+    [ngClass]="{
+      'render-pokeball': renderPokeball,
+      'animate-pokemon-shake': animatePokeballShake,
+      'animate-pokemon-caught': animatePokemonCaught,
+    }"
+  >
+    <div class="pokedex-modal-top-section"><div class="black-half-circle-top"></div></div>
+    <div class="pokedex-modal-middle-section">
+      <ng-content></ng-content>
+    </div>
+    <div class="pokedex-modal-bottom-section"><div class="black-half-circle-bottom"></div></div>
+  </div>
+</div>

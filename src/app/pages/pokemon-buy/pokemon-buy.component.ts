@@ -7,12 +7,16 @@ import { StockTransaction, TransactionService } from '../../shared/services/tran
 import { UserService } from '../../shared/services/user.service';
 import { zip } from 'rxjs';
 import { NgClass } from '@angular/common';
+import {
+  PokedexModalComponent,
+  PokedexModalResult,
+} from '../../shared/components/pokedex-modal/pokedex-modal.component';
 
 export type SortBy = 'sharePriceDesc' | 'shareVolumeDesc' | 'shareVolumeAsc';
 
 @Component({
   selector: 'app-pokemon-buy',
-  imports: [PokeDollarsComponent, FormsModule, LoaderComponent, NgClass],
+  imports: [PokeDollarsComponent, FormsModule, LoaderComponent, NgClass, PokedexModalComponent],
   templateUrl: './pokemon-buy.component.html',
   styleUrl: './pokemon-buy.component.scss',
 })
@@ -23,6 +27,8 @@ export class PokemonBuyComponent {
   sortBy: SortBy = 'sharePriceDesc';
   selectedAsk = signal<StockTransaction | null>(null);
   buyConfirmed = signal(false);
+
+  buyResult = signal<PokedexModalResult>('notStarted');
 
   constructor(
     private pokemonService: PokemonService,
@@ -68,5 +74,12 @@ export class PokemonBuyComponent {
       return 0;
     });
     this.asks.set(asks);
+  }
+
+  buySelected() {
+    this.buyResult.set('inProgress');
+    setTimeout(() => {
+      this.buyResult.set('successful');
+    }, 3500);
   }
 }
