@@ -6,44 +6,23 @@ import { Pokemon, PokemonService } from '../../shared/services/pokemon.service';
 import { StockTransaction, TransactionService } from '../../shared/services/transaction.service';
 import { UserService } from '../../shared/services/user.service';
 import { zip } from 'rxjs';
-
-// export class Ask {
-//   sharePrice: number;
-//   shareCount: number;
-//   ownerName: string;
-
-//   constructor(params: AskParams) {
-//     this.sharePrice = params.sharePrice;
-//     this.shareCount = params.shareCount;
-//     this.ownerName = params.ownerName;
-//   }
-
-//   get totalValue(): number {
-//     return this.sharePrice * this.shareCount;
-//   }
-// }
-
-// interface AskParams {
-//   sharePrice: number;
-//   shareCount: number;
-//   ownerName: string;
-// }
+import { NgClass } from '@angular/common';
 
 export type SortBy = 'sharePriceDesc' | 'shareVolumeDesc' | 'shareVolumeAsc';
 
 @Component({
   selector: 'app-pokemon-buy',
-  imports: [PokeDollarsComponent, FormsModule, LoaderComponent],
+  imports: [PokeDollarsComponent, FormsModule, LoaderComponent, NgClass],
   templateUrl: './pokemon-buy.component.html',
   styleUrl: './pokemon-buy.component.scss',
 })
-//  implements OnInit
 export class PokemonBuyComponent {
   pokemon = signal<Pokemon>(new Pokemon());
   loading = signal(true);
   asks = signal<StockTransaction[]>([]);
   sortBy: SortBy = 'sharePriceDesc';
   selectedAsk = signal<StockTransaction | null>(null);
+  buyConfirmed = signal(false);
 
   constructor(
     private pokemonService: PokemonService,
