@@ -21,7 +21,6 @@ export class PokemonPositionComponent {
     private readonly userService: UserService,
   ) {
     effect(() => {
-      console.log('DOING THE EFFECT');
       const pokemonKey = this.pokemonKey();
       this.loading.set(true);
       this.userService
