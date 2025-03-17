@@ -40,4 +40,8 @@ export class PokedexModalComponent {
   get animatePokemonCaught() {
     return this._result() === 'successful';
   }
+
+  get animatePokemonEscape() {
+    return this._result() === 'failed';
+  }
 }

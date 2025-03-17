@@ -1,22 +1,21 @@
-import { Component, Input, OnInit, signal } from '@angular/core';
-import { PokeDollarsComponent } from '../../shared/components/poke-dollars/poke-dollars.component';
+import { Component, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { LoaderComponent } from '../../shared/components/loader/loader.component';
-import { Pokemon, PokemonService } from '../../shared/services/pokemon.service';
-import { StockTransaction, TransactionService } from '../../shared/services/transaction.service';
-import { UserService } from '../../shared/services/user.service';
 import { zip } from 'rxjs';
-import { NgClass } from '@angular/common';
+import { LoaderComponent } from '../../shared/components/loader/loader.component';
+import { PokeDollarsComponent } from '../../shared/components/poke-dollars/poke-dollars.component';
 import {
   PokedexModalComponent,
   PokedexModalResult,
 } from '../../shared/components/pokedex-modal/pokedex-modal.component';
+import { Pokemon, PokemonService } from '../../shared/services/pokemon.service';
+import { StockTransaction, TransactionService } from '../../shared/services/transaction.service';
+import { UserService } from '../../shared/services/user.service';
 
 export type SortBy = 'sharePriceDesc' | 'shareVolumeDesc' | 'shareVolumeAsc';
 
 @Component({
   selector: 'app-pokemon-buy',
-  imports: [PokeDollarsComponent, FormsModule, LoaderComponent, NgClass, PokedexModalComponent],
+  imports: [PokeDollarsComponent, FormsModule, LoaderComponent, PokedexModalComponent],
   templateUrl: './pokemon-buy.component.html',
   styleUrl: './pokemon-buy.component.scss',
 })
@@ -79,7 +78,8 @@ export class PokemonBuyComponent {
   buySelected() {
     this.buyResult.set('inProgress');
     setTimeout(() => {
-      this.buyResult.set('successful');
+      // this.buyResult.set('successful');
+      this.buyResult.set('failed');
     }, 3500);
   }
 }

@@ -115,6 +115,23 @@ $shake-rotation: 10deg;
       animation: pokeballCaught 1s 0.4s 1 forwards;
     }
   }
+  &.animate-pokemon-escaped {
+    // height: 302px;
+    // width: $top-bottom-section-height * 2;
+    animation: reExpandModalContainer 0.8s forwards;
+
+    .pokedex-modal-middle-section {
+      animation: none;
+    }
+
+    .pokedex-modal-top-section {
+      animation: expandTopSection 0.8s forwards;
+    }
+
+    .pokedex-modal-bottom-section {
+      animation: expandBottomSection 0.8s forwards;
+    }
+  }
 }
 
 @keyframes fadeInModalContainer {
@@ -146,6 +163,17 @@ $shake-rotation: 10deg;
   }
 }
 
+@keyframes reExpandModalContainer {
+  from {
+    height: 302px;
+    width: $top-bottom-section-height * 2;
+  }
+  to {
+    height: 92%;
+    width: 450px;
+  }
+}
+
 @keyframes contractCenterSection {
   from {
     padding: 10px;
@@ -168,6 +196,17 @@ $shake-rotation: 10deg;
   }
 }
 
+@keyframes expandTopSection {
+  from {
+    border-top-left-radius: $modal-border-radius-contracted;
+    border-top-right-radius: $modal-border-radius-contracted;
+  }
+  to {
+    border-top-left-radius: $modal-border-radius;
+    border-top-right-radius: $modal-border-radius;
+  }
+}
+
 @keyframes contractBottomSection {
   from {
     border-bottom-left-radius: $modal-border-radius;
@@ -176,6 +215,17 @@ $shake-rotation: 10deg;
   to {
     border-bottom-left-radius: $modal-border-radius-contracted;
     border-bottom-right-radius: $modal-border-radius-contracted;
+  }
+}
+
+@keyframes expandBottomSection {
+  from {
+    border-bottom-left-radius: $modal-border-radius-contracted;
+    border-bottom-right-radius: $modal-border-radius-contracted;
+  }
+  to {
+    border-bottom-left-radius: $modal-border-radius;
+    border-bottom-right-radius: $modal-border-radius;
   }
 }
 
