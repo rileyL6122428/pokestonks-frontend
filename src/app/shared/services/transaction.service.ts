@@ -1,31 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, delay, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   StockTransaction,
   StockTransactionStatus,
   StockTransactionType,
 } from '../model/stock-transaction';
-import { mockDatabase } from '../mock/database';
+import { MockApi } from '../mock/api';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TransactionService {
-  getTransactionsForOwner(
+  constructor(private api: MockApi) {}
+
+  getTransactionsForOwnerByPokemon(
     ownerUsername: string,
     pokemonKey: string,
     status: StockTransactionStatus,
   ): Observable<StockTransaction[]> {
-    const matched = mockDatabase.stockTransactionsTable.select(
-      (transaction) =>
-        transaction.ownerUsername === ownerUsername &&
-        transaction.pokemonKey === pokemonKey &&
-        transaction.status === status,
-    );
-    return of(matched ?? []).pipe(
-      delay(1000),
-      tap((transaction) => console.log('Retrieved transaction', transaction)),
-    );
+    return this.api.callOperation({
+      name: 'getTransactionsForOwnerByPokemon',
+      payload: { ownerUsername, pokemonKey, status },
+    });
   }
 
   getTransactionsForPokemon(params: {
@@ -33,25 +29,16 @@ export class TransactionService {
     status: StockTransactionStatus;
     type: StockTransactionType;
   }): Observable<StockTransaction[]> {
-    const { pokemonKey, status, type } = params;
-    const matched = mockDatabase.stockTransactionsTable.select(
-      (transaction) =>
-        transaction.pokemonKey === pokemonKey &&
-        transaction.status === status &&
-        transaction.type === type,
-    );
-
-    return of(matched).pipe(
-      delay(1000),
-      tap((transaction) => console.log('Retrieved transaction', transaction)),
-    );
+    return this.api.callOperation({
+      name: 'getTransactionsForPokemon',
+      payload: params,
+    });
   }
 
   cancelTransaction(transaction: StockTransaction): Observable<boolean> {
-    const rowsUpdatedCount = mockDatabase.stockTransactionsTable.update(
-      (row) => row === transaction,
-      (row) => new StockTransaction({ ...row, status: 'cancelled' }),
-    );
-    return of(!!rowsUpdatedCount).pipe(delay(1000));
+    return this.api.callOperation({
+      name: 'cancelTransaction',
+      payload: transaction,
+    });
   }
 }

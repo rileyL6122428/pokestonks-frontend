@@ -3,7 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { BehaviorSubject, debounceTime, mergeMap, Subscription } from 'rxjs';
 import { Pokemon, PokemonService } from './shared/services/pokemon.service';
-import { User, UserService } from './shared/services/user.service';
+import { UserService } from './shared/services/user.service';
+import { User } from './shared/model/user';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,7 @@ export class AppComponent {
   searchUpdate = new BehaviorSubject<string>('');
   private searchSub: Subscription = new Subscription();
   searchResults = signal<Pokemon[]>([]);
-  currentUser = signal<User>(new User(''));
+  currentUser = signal<User>(new User({ username: '' }));
 
   constructor(
     private pokemonService: PokemonService,

@@ -1,4 +1,5 @@
 import { StockTransaction } from '../model/stock-transaction';
+import { User } from '../model/user';
 
 export class MockDatabaseTable<T> {
   private rows: T[] = [];
@@ -30,12 +31,18 @@ export class MockDatabaseTable<T> {
   select(predicate: (row: T) => boolean): T[] {
     return this.rows.filter(predicate);
   }
+
+  selectOne(predicate: (row: T) => boolean): T | null {
+    return this.rows.find(predicate) ?? null;
+  }
 }
 
 class StockTransactionTable extends MockDatabaseTable<StockTransaction> {}
+class UserTable extends MockDatabaseTable<User> {}
 
 export class MockDatabase {
   readonly stockTransactionsTable = new StockTransactionTable();
+  readonly usersTable = new UserTable();
 
   seed() {
     this.stockTransactionsTable.insert([
@@ -59,7 +66,7 @@ export class MockDatabase {
         pokemonKey: '898-ice-rider',
         shareCount: 200,
         sharePricePokeDollars: 105,
-        ownerUsername: 'Oak',
+        ownerUsername: 'oak',
         type: 'ask',
         status: 'pending',
       }),
@@ -67,9 +74,21 @@ export class MockDatabase {
         pokemonKey: '898-ice-rider',
         shareCount: 100,
         sharePricePokeDollars: 106,
-        ownerUsername: 'Lorelei',
+        ownerUsername: 'lorelei',
         type: 'ask',
         status: 'pending',
+      }),
+    ]);
+
+    this.usersTable.insert([
+      new User({
+        username: 'red',
+      }),
+      new User({
+        username: 'oak',
+      }),
+      new User({
+        username: 'lorelei',
       }),
     ]);
   }

@@ -1,11 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, ReplaySubject } from 'rxjs';
-
-export class User {
-  constructor(public username: string) {}
-}
-
-const CURRENT_USER = new User('red');
+import { User } from '../model/user';
+import { MockApi } from '../mock/api';
 
 @Injectable({
   providedIn: 'root',
@@ -14,12 +10,15 @@ export class UserService {
   private currentUser$: ReplaySubject<User> = new ReplaySubject<User>(1);
   private currentUserLoaded = false;
 
-  constructor() {}
+  constructor(private api: MockApi) {}
 
   getCurrentUser(): Observable<User> {
+    // const currentUser = mockDatabase.usersTable.selectOne((user) => user.username === 'red');
     if (!this.currentUserLoaded) {
+      this.api.callOperation({ name: 'getCurrentUser' }).subscribe((currentUser) => {
+        this.currentUser$.next(currentUser);
+      });
       this.currentUserLoaded = true;
-      setTimeout(() => this.currentUser$.next(CURRENT_USER), 1000);
     }
     return this.currentUser$.asObservable();
   }
