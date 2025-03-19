@@ -3,20 +3,21 @@ import { mockDatabase } from './database';
 import { Injectable } from '@angular/core';
 import { User } from '../model/user';
 import { StockTransaction } from '../model/stock-transaction';
+import { Pokemon } from '../model/pokemon';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MockApi {
-  callOperation(params: OperationParams): Observable<any> {
-    const { name, payload } = params;
-    const operation = this.routeRequest({ name });
-    return of(operation(payload)).pipe(delay(250 + 1750 * Math.random()));
+  call(params: OperationParams): Observable<any> {
+    const { operationName, payload } = params;
+    const operation = this.routeRequest({ operationName });
+    return of(operation(payload)).pipe(delay(250 + 1500 * Math.random()));
   }
 
-  routeRequest(params: { name: string }) {
-    const { name } = params;
-    switch (name) {
+  routeRequest(params: { operationName: string }) {
+    const { operationName } = params;
+    switch (operationName) {
       case 'getTransactionsForPokemon':
         return this.getTransactionsForPokemon;
       case 'getTransactionsForOwnerByPokemon':
@@ -25,8 +26,12 @@ export class MockApi {
         return this.getCurrentUser;
       case 'cancelTransaction':
         return this.cancelTransaction;
+      case 'getAPokemon':
+        return this.getAPokemon;
+      case 'searchPokemon':
+        return this.searchPokemon;
       default:
-        throw new Error(`Unknown operation: ${name}`);
+        throw new Error(`Unknown operation: ${operationName}`);
     }
   }
 
@@ -73,9 +78,20 @@ export class MockApi {
   getCurrentUser(): User {
     return mockDatabase.usersTable.selectOne((user) => user.username === 'red')!;
   }
+
+  getAPokemon(params: { key: string }): Pokemon {
+    return mockDatabase.pokemonTable.selectOne((pokemon) => pokemon.key === params.key)!;
+  }
+
+  searchPokemon(params: { query: string }): Pokemon[] {
+    const { query } = params;
+    return mockDatabase.pokemonTable
+      .select((pokemon) => pokemon.name.toLowerCase().includes(query.toLowerCase()))
+      .slice(0, 5);
+  }
 }
 
 export interface OperationParams {
-  name: string;
+  operationName: string;
   payload?: any;
 }

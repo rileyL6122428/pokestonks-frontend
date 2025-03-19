@@ -1,6 +1,6 @@
 import { Component, Input, signal } from '@angular/core';
 import { TransactionService } from '../../shared/services/transaction.service';
-import { Pokemon, PokemonService } from '../../shared/services/pokemon.service';
+import { PokemonService } from '../../shared/services/pokemon.service';
 import { UserService } from '../../shared/services/user.service';
 import { mergeMap, zip } from 'rxjs';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
@@ -9,6 +9,7 @@ import { TitleCasePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { StockTransaction } from '../../shared/model/stock-transaction';
 import { User } from '../../shared/model/user';
+import { Pokemon } from '../../shared/model/pokemon';
 
 @Component({
   selector: 'app-pending-transaction',

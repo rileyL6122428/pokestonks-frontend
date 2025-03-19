@@ -18,8 +18,8 @@ export class TransactionService {
     pokemonKey: string,
     status: StockTransactionStatus,
   ): Observable<StockTransaction[]> {
-    return this.api.callOperation({
-      name: 'getTransactionsForOwnerByPokemon',
+    return this.api.call({
+      operationName: 'getTransactionsForOwnerByPokemon',
       payload: { ownerUsername, pokemonKey, status },
     });
   }
@@ -29,15 +29,15 @@ export class TransactionService {
     status: StockTransactionStatus;
     type: StockTransactionType;
   }): Observable<StockTransaction[]> {
-    return this.api.callOperation({
-      name: 'getTransactionsForPokemon',
+    return this.api.call({
+      operationName: 'getTransactionsForPokemon',
       payload: params,
     });
   }
 
   cancelTransaction(transaction: StockTransaction): Observable<boolean> {
-    return this.api.callOperation({
-      name: 'cancelTransaction',
+    return this.api.call({
+      operationName: 'cancelTransaction',
       payload: transaction,
     });
   }

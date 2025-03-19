@@ -7,10 +7,11 @@ import {
   PokedexModalComponent,
   PokedexModalResult,
 } from '../../shared/components/pokedex-modal/pokedex-modal.component';
-import { Pokemon, PokemonService } from '../../shared/services/pokemon.service';
+import { PokemonService } from '../../shared/services/pokemon.service';
 import { TransactionService } from '../../shared/services/transaction.service';
 import { UserService } from '../../shared/services/user.service';
 import { StockTransaction } from '../../shared/model/stock-transaction';
+import { Pokemon } from '../../shared/model/pokemon';
 
 export type SortBy = 'sharePriceDesc' | 'shareVolumeDesc' | 'shareVolumeAsc';
 

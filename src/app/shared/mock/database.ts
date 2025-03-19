@@ -1,3 +1,4 @@
+import { Pokemon } from '../model/pokemon';
 import { StockTransaction } from '../model/stock-transaction';
 import { User } from '../model/user';
 
@@ -39,10 +40,12 @@ export class MockDatabaseTable<T> {
 
 class StockTransactionTable extends MockDatabaseTable<StockTransaction> {}
 class UserTable extends MockDatabaseTable<User> {}
+class PokemonTable extends MockDatabaseTable<Pokemon> {}
 
 export class MockDatabase {
   readonly stockTransactionsTable = new StockTransactionTable();
   readonly usersTable = new UserTable();
+  readonly pokemonTable = new PokemonTable();
 
   seed() {
     this.stockTransactionsTable.insert([
@@ -89,6 +92,45 @@ export class MockDatabase {
       }),
       new User({
         username: 'lorelei',
+      }),
+    ]);
+
+    this.pokemonTable.insert([
+      new Pokemon({
+        number: 3,
+        form: 'default',
+        name: 'Venusaur',
+        slogan: 'Sleep powder giveth, sleep powder taketh.',
+        operatingMarginPercent: 80,
+        totalShares: 1000,
+        availableShares: 200,
+        bidPokeDollars: 99,
+        askPokeDollars: 105,
+        lastTradePokeDollars: 100,
+      }),
+      new Pokemon({
+        number: 898,
+        form: 'ice-rider',
+        name: 'Ice Rider Calyrex',
+        slogan: 'DLC cost for DLC quality',
+        operatingMarginPercent: 80,
+        totalShares: 1000,
+        availableShares: 200,
+        bidPokeDollars: 99,
+        askPokeDollars: 105,
+        lastTradePokeDollars: 100,
+      }),
+      new Pokemon({
+        number: 898,
+        form: 'shadow-rider',
+        name: 'Shadow Rider Calyrex',
+        slogan: 'Eclipsing Mewtwo since October 23rd, 2020.',
+        operatingMarginPercent: 80,
+        totalShares: 1000,
+        availableShares: 200,
+        bidPokeDollars: 99,
+        askPokeDollars: 105,
+        lastTradePokeDollars: 100,
       }),
     ]);
   }

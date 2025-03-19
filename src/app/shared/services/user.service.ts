@@ -13,9 +13,8 @@ export class UserService {
   constructor(private api: MockApi) {}
 
   getCurrentUser(): Observable<User> {
-    // const currentUser = mockDatabase.usersTable.selectOne((user) => user.username === 'red');
     if (!this.currentUserLoaded) {
-      this.api.callOperation({ name: 'getCurrentUser' }).subscribe((currentUser) => {
+      this.api.call({ operationName: 'getCurrentUser' }).subscribe((currentUser) => {
         this.currentUser$.next(currentUser);
       });
       this.currentUserLoaded = true;

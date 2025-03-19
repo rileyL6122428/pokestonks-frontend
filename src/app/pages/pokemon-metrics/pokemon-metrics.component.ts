@@ -1,9 +1,10 @@
 import { Component, effect, input, signal } from '@angular/core';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
 import { PokeDollarsComponent } from '../../shared/components/poke-dollars/poke-dollars.component';
-import { Pokemon, PokemonService } from '../../shared/services/pokemon.service';
+import { PokemonService } from '../../shared/services/pokemon.service';
 import { PendingTransactionComponent } from '../pending-transaction/pending-transaction.component';
 import { PokemonPositionComponent } from '../pokemon-position/pokemon-position.component';
+import { Pokemon } from '../../shared/model/pokemon';
 
 @Component({
   selector: 'app-pokemon-metrics',

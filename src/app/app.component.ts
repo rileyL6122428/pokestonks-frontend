@@ -2,9 +2,10 @@ import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { BehaviorSubject, debounceTime, mergeMap, Subscription } from 'rxjs';
-import { Pokemon, PokemonService } from './shared/services/pokemon.service';
+import { PokemonService } from './shared/services/pokemon.service';
 import { UserService } from './shared/services/user.service';
 import { User } from './shared/model/user';
+import { Pokemon } from './shared/model/pokemon';
 
 @Component({
   selector: 'app-root',
