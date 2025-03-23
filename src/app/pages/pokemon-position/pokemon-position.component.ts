@@ -1,9 +1,8 @@
-import { Component, effect, input, signal } from '@angular/core';
-import { PokeDollarsComponent } from '../../shared/components/poke-dollars/poke-dollars.component';
-import { PortfolioService, Position } from '../../shared/services/portfolio.service';
-import { UserService } from '../../shared/services/user.service';
-import { map, mergeMap } from 'rxjs';
+import { Component, input } from '@angular/core';
 import { LoaderComponent } from '../../shared/components/loader/loader.component';
+import { PokeDollarsComponent } from '../../shared/components/poke-dollars/poke-dollars.component';
+import { Position } from '../../shared/model/position';
+import { StockTransaction } from '../../shared/model/stock-transaction';
 
 @Component({
   selector: 'app-pokemon-position',
@@ -12,36 +11,18 @@ import { LoaderComponent } from '../../shared/components/loader/loader.component
   styleUrl: './pokemon-position.component.scss',
 })
 export class PokemonPositionComponent {
-  pokemonKey = input<string>('');
-  loading = signal(true);
-  position = signal<Position | null>(null);
+  loading = input(true);
+  position = input<Position | null>(null);
+  lastTransaction = input<StockTransaction | null>(null);
 
-  constructor(
-    private readonly portfolioService: PortfolioService,
-    private readonly userService: UserService,
-  ) {
-    effect(() => {
-      const pokemonKey = this.pokemonKey();
-      this.loading.set(true);
-      this.userService
-        .getCurrentUser()
-        .pipe(
-          map((user) => user.username),
-          mergeMap((username: string) => {
-            console.log('Sup');
-            return this.portfolioService.getPosition({ username, pokemonKey });
-          }),
-        )
-        .subscribe((position: Position) => {
-          console.log('SUP AGAIN');
-          this.position.set(position);
-          this.loading.set(false);
-        });
-    });
-  }
+  get valuation(): number | null {
+    if (this.position() === null || this.lastTransaction() === null) {
+      return null;
+    }
 
-  get valuation(): number {
-    const position = this.position();
-    return position ? position.ownedSharesCount * position.lastPrice : 0;
+    return (
+      this.position()!.ownedSharesCount *
+      this.lastTransaction()!.sharePricePokeDollars
+    );
   }
 }

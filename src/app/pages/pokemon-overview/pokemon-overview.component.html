@@ -1,5 +1,5 @@
 <section id="metrics">
-  @if (!isloading()) {
+  @if (!isloadingMetrics()) {
     <img [src]="portraitUrl" [attr.alt]="imageAlt" width="300" height="300" />
 
     <div id="title-and-slogan">
@@ -62,5 +62,9 @@
     [isloading]="isLoadingPendingTransaction()"
     (cancelTransaction)="cancelTransaction()"
   ></app-pending-transaction>
-  <app-pokemon-position [pokemonKey]="pokemonKey()"></app-pokemon-position>
+  <app-pokemon-position
+    [position]="position()"
+    [lastTransaction]="lastTransaction()"
+    [loading]="isLoadingPosition()"
+  ></app-pokemon-position>
 </div>

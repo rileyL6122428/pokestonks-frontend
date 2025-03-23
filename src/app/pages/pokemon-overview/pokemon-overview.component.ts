@@ -11,6 +11,7 @@ import { PendingTransactionComponent } from '../pending-transaction/pending-tran
 import { PokemonPositionComponent } from '../pokemon-position/pokemon-position.component';
 import { StockTransaction } from '../../shared/model/stock-transaction';
 import { TransactionService } from '../../shared/services/transaction.service';
+import { Position } from '../../shared/model/position';
 
 @Component({
   selector: 'app-pokemon-overview',
@@ -27,15 +28,18 @@ export class PokemonOverviewComponent {
   pokemonKey = input<string>('');
   user = signal<User>(new User({ username: '' }));
 
-  isloading = signal(true);
+  isloadingMetrics = signal(true);
   pokemon = signal<Pokemon>(new Pokemon());
   lastTransaction = signal<StockTransaction | null>(null);
   lowestAsk = signal<StockTransaction | null>(null);
   highestBid = signal<StockTransaction | null>(null);
   availableShares = signal<number | null>(null);
 
-  pendingTransaction = signal<StockTransaction | null>(null);
   isLoadingPendingTransaction = signal(true);
+  pendingTransaction = signal<StockTransaction | null>(null);
+
+  isLoadingPosition = signal(true);
+  position = signal<Position | null>(null);
 
   constructor(
     private overviewService: PokemonOverviewService,
@@ -45,7 +49,7 @@ export class PokemonOverviewComponent {
     effect(() => {
       const pokemonKey = this.pokemonKey();
 
-      this.isloading.set(true);
+      this.isloadingMetrics.set(true);
       this.isLoadingPendingTransaction.set(true);
       this.userService
         .getCurrentUser()
@@ -59,16 +63,18 @@ export class PokemonOverviewComponent {
           }),
         )
         .subscribe((overview: PokemonOverview) => {
+          this.isloadingMetrics.set(false);
           this.pokemon.set(overview.pokemon);
           this.lastTransaction.set(overview.lastTransaction);
           this.lowestAsk.set(overview.lowestAsk);
           this.highestBid.set(overview.highestBid);
           this.availableShares.set(overview.availableShares);
 
-          this.pendingTransaction.set(overview.pendingTransaction);
           this.isLoadingPendingTransaction.set(false);
+          this.pendingTransaction.set(overview.pendingTransaction);
 
-          this.isloading.set(false);
+          this.isLoadingPosition.set(false);
+          this.position.set(overview.position);
         });
     });
   }
