@@ -12,17 +12,17 @@ import { PokemonPositionComponent } from '../pokemon-position/pokemon-position.c
 import { StockTransaction } from '../../shared/model/stock-transaction';
 
 @Component({
-  selector: 'app-pokemon-metrics',
+  selector: 'app-pokemon-overview',
   imports: [
     LoaderComponent,
     PokeDollarsComponent,
     PendingTransactionComponent,
     PokemonPositionComponent,
   ],
-  templateUrl: './pokemon-metrics.component.html',
-  styleUrl: './pokemon-metrics.component.scss',
+  templateUrl: './pokemon-overview.component.html',
+  styleUrl: './pokemon-overview.component.scss',
 })
-export class PokemonMetricsComponent {
+export class PokemonOverviewComponent {
   pokemonKey = input<string>('');
   user = signal<User>(new User({ username: '' }));
 

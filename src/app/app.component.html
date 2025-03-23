@@ -1,6 +1,11 @@
 <div id="header">
   <h1>
-    <a [routerLink]="'/'" (click)="searchInput.value = ''; searchResults.set([])"> Pokestonks </a>
+    <a
+      [routerLink]="'/'"
+      (click)="searchInput.value = ''; searchResults.set([])"
+    >
+      Pokestonks
+    </a>
   </h1>
   <div>
     <p>Welcome, {{ currentUser().username }}</p>
@@ -17,7 +22,9 @@
   <ul>
     @for (pokemon of searchResults(); track pokemon.key) {
       <li>
-        <a [routerLink]="['/pokemon', pokemon.key, 'metrics']">{{ pokemon.name }}</a>
+        <a [routerLink]="['/pokemon', pokemon.key, 'overview']">{{
+          pokemon.name
+        }}</a>
       </li>
     }
   </ul>
