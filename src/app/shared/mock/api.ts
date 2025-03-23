@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { User } from '../model/user';
 import { StockTransaction } from '../model/stock-transaction';
 import { Pokemon } from '../model/pokemon';
+import { PokemonOverview } from '../model/pokemon-overview';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,8 @@ export class MockApi {
         return this.getAPokemon;
       case 'searchPokemon':
         return this.searchPokemon;
+      case 'getPokemonOverviewForUser':
+        return this.getPokemonOverviewForUser;
       default:
         throw new Error(`Unknown operation: ${operationName}`);
     }
@@ -76,18 +79,85 @@ export class MockApi {
   }
 
   getCurrentUser(): User {
-    return mockDatabase.usersTable.selectOne((user) => user.username === 'red')!;
+    return mockDatabase.usersTable.selectOne(
+      (user) => user.username === 'red',
+    )!;
   }
 
   getAPokemon(params: { key: string }): Pokemon {
-    return mockDatabase.pokemonTable.selectOne((pokemon) => pokemon.key === params.key)!;
+    return mockDatabase.pokemonTable.selectOne(
+      (pokemon) => pokemon.key === params.key,
+    )!;
   }
 
   searchPokemon(params: { query: string }): Pokemon[] {
     const { query } = params;
     return mockDatabase.pokemonTable
-      .select((pokemon) => pokemon.name.toLowerCase().includes(query.toLowerCase()))
+      .select((pokemon) =>
+        pokemon.name.toLowerCase().includes(query.toLowerCase()),
+      )
       .slice(0, 5);
+  }
+
+  getPokemonOverviewForUser(params: {
+    ownerUsername: string;
+    pokemonKey: string;
+  }) {
+    const { ownerUsername, pokemonKey } = params;
+
+    const pokemon = mockDatabase.pokemonTable.selectOne(
+      (pokemon) => pokemon.key === pokemonKey,
+    )!;
+    const position = mockDatabase.positionsTable.selectOne(
+      (position) =>
+        position.ownerUsername === ownerUsername &&
+        position.pokemonKey === pokemonKey,
+    );
+    const lastTransaction = mockDatabase.stockTransactionsTable.selectOne(
+      (transaction) =>
+        transaction.pokemonKey === pokemonKey &&
+        transaction.status === 'completed',
+    )!;
+    const lowestAsk = mockDatabase.stockTransactionsTable.selectOne(
+      (transaction) =>
+        transaction.pokemonKey === pokemonKey &&
+        transaction.type === 'ask' &&
+        transaction.status === 'pending',
+    );
+    const highestBid = mockDatabase.stockTransactionsTable.selectOne(
+      (transaction) =>
+        transaction.pokemonKey === pokemonKey &&
+        transaction.type === 'bid' &&
+        transaction.status === 'pending',
+    );
+    const pendingTransaction = mockDatabase.stockTransactionsTable.selectOne(
+      (transaction) =>
+        transaction.pokemonKey === pokemonKey &&
+        transaction.status === 'pending' &&
+        (transaction.type === 'bid' || transaction.type === 'ask') &&
+        transaction.ownerUsername === ownerUsername,
+    );
+
+    const positionsInPokemon = mockDatabase.positionsTable.select(
+      (position) => position.pokemonKey === pokemonKey,
+    );
+    debugger;
+    const availableShares =
+      pokemon.totalShares -
+      positionsInPokemon.reduce(
+        (acc, position) => acc + position.ownedSharesCount,
+        0,
+      );
+
+    return new PokemonOverview({
+      pokemon,
+      position,
+      lastTransaction,
+      lowestAsk,
+      highestBid,
+      pendingTransaction,
+      availableShares,
+    });
   }
 }
 

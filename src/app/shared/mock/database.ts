@@ -1,4 +1,5 @@
 import { Pokemon } from '../model/pokemon';
+import { Position } from '../model/position';
 import { StockTransaction } from '../model/stock-transaction';
 import { User } from '../model/user';
 
@@ -41,11 +42,13 @@ export class MockDatabaseTable<T> {
 class StockTransactionTable extends MockDatabaseTable<StockTransaction> {}
 class UserTable extends MockDatabaseTable<User> {}
 class PokemonTable extends MockDatabaseTable<Pokemon> {}
+class PositionTable extends MockDatabaseTable<Position> {}
 
 export class MockDatabase {
   readonly stockTransactionsTable = new StockTransactionTable();
   readonly usersTable = new UserTable();
   readonly pokemonTable = new PokemonTable();
+  readonly positionsTable = new PositionTable();
 
   seed() {
     this.stockTransactionsTable.insert([
@@ -81,6 +84,22 @@ export class MockDatabase {
         type: 'ask',
         status: 'pending',
       }),
+      new StockTransaction({
+        pokemonKey: '898-ice-rider',
+        shareCount: 100,
+        sharePricePokeDollars: 100,
+        ownerUsername: 'pryce',
+        type: 'ask',
+        status: 'completed',
+      }),
+      new StockTransaction({
+        pokemonKey: '898-ice-rider',
+        shareCount: 100,
+        sharePricePokeDollars: 98,
+        ownerUsername: 'wulfric',
+        type: 'bid',
+        status: 'pending',
+      }),
     ]);
 
     this.usersTable.insert([
@@ -103,10 +122,6 @@ export class MockDatabase {
         slogan: 'Sleep powder giveth, sleep powder taketh.',
         operatingMarginPercent: 80,
         totalShares: 1000,
-        availableShares: 200,
-        bidPokeDollars: 99,
-        askPokeDollars: 105,
-        lastTradePokeDollars: 100,
       }),
       new Pokemon({
         number: 898,
@@ -115,10 +130,6 @@ export class MockDatabase {
         slogan: 'DLC cost for DLC quality',
         operatingMarginPercent: 80,
         totalShares: 1000,
-        availableShares: 200,
-        bidPokeDollars: 99,
-        askPokeDollars: 105,
-        lastTradePokeDollars: 100,
       }),
       new Pokemon({
         number: 898,
@@ -127,10 +138,19 @@ export class MockDatabase {
         slogan: 'Eclipsing Mewtwo since October 23rd, 2020.',
         operatingMarginPercent: 80,
         totalShares: 1000,
-        availableShares: 200,
-        bidPokeDollars: 99,
-        askPokeDollars: 105,
-        lastTradePokeDollars: 100,
+      }),
+    ]);
+
+    this.positionsTable.insert([
+      new Position({
+        pokemonKey: '898-ice-rider',
+        ownedSharesCount: 200,
+        ownerUsername: 'red',
+      }),
+      new Position({
+        pokemonKey: '898-ice-rider',
+        ownedSharesCount: 100,
+        ownerUsername: 'pryce',
       }),
     ]);
   }

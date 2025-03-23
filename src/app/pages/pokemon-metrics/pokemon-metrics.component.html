@@ -6,12 +6,49 @@
       <h2>{{ pokemon().name }}</h2>
       <p>{{ pokemon().slogan }}</p>
       <p>Operating margin: {{ pokemon().operatingMarginPercent }}%</p>
-      <p>Last: <app-poke-dollars [amount]="pokemon().lastTradePokeDollars" /></p>
-      <p>Bid: <app-poke-dollars [amount]="pokemon().bidPokeDollars" /></p>
-      <p>Ask: <app-poke-dollars [amount]="pokemon().askPokeDollars" /></p>
+      <p>
+        Last:
+        @if (lastTransaction()) {
+          <app-poke-dollars
+            [amount]="lastTransaction()!.sharePricePokeDollars"
+          />
+        } @else {
+          <i>not found</i>
+        }
+      </p>
+      <p>
+        Bid:
+        @if (highestBid()) {
+          <app-poke-dollars [amount]="highestBid()!.sharePricePokeDollars" />
+        } @else {
+          <i>not found</i>
+        }
+      </p>
+      <p>
+        Ask:
+        @if (lowestAsk()) {
+          <app-poke-dollars [amount]="lowestAsk()!.sharePricePokeDollars" />
+        } @else {
+          <i>not found</i>
+        }
+      </p>
       <p>Total shares: {{ pokemon().totalShares }}</p>
-      <p>Available shares: {{ pokemon().availableShares }}</p>
-      <p>Market cap: <app-poke-dollars [amount]="pokemon().marketCapPokeDollars" /></p>
+      <p>
+        Available shares:
+        @if (availableShares() !== null) {
+          {{ availableShares() }}
+        } @else {
+          <i>not found</i>
+        }
+      </p>
+      <p>
+        Market cap:
+        @if (marketCap) {
+          <app-poke-dollars [amount]="marketCap" />
+        } @else {
+          <i>not found</i>
+        }
+      </p>
     </div>
   } @else {
     <app-loader></app-loader>
@@ -19,6 +56,8 @@
 </section>
 
 <div id="pokemon-position-container">
-  <app-pending-transaction [pokemonKey]="pokemonKey()"></app-pending-transaction>
+  <app-pending-transaction
+    [pokemonKey]="pokemonKey()"
+  ></app-pending-transaction>
   <app-pokemon-position [pokemonKey]="pokemonKey()"></app-pokemon-position>
 </div>
