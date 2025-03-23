@@ -10,7 +10,7 @@ export class PokemonOverviewService {
   constructor(private api: MockApi) {}
 
   getPokemonOverviewForUser(params: {
-    username: string;
+    ownerUsername: string;
     pokemonKey: string;
   }): Observable<PokemonOverview> {
     return this.api.call({

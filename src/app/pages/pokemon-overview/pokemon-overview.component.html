@@ -57,7 +57,10 @@
 
 <div id="pokemon-position-container">
   <app-pending-transaction
-    [pokemonKey]="pokemonKey()"
+    [pokemon]="pokemon()"
+    [pendingTransaction]="pendingTransaction()"
+    [isloading]="isLoadingPendingTransaction()"
+    (cancelTransaction)="cancelTransaction()"
   ></app-pending-transaction>
   <app-pokemon-position [pokemonKey]="pokemonKey()"></app-pokemon-position>
 </div>

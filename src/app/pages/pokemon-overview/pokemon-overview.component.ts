@@ -10,6 +10,7 @@ import { UserService } from '../../shared/services/user.service';
 import { PendingTransactionComponent } from '../pending-transaction/pending-transaction.component';
 import { PokemonPositionComponent } from '../pokemon-position/pokemon-position.component';
 import { StockTransaction } from '../../shared/model/stock-transaction';
+import { TransactionService } from '../../shared/services/transaction.service';
 
 @Component({
   selector: 'app-pokemon-overview',
@@ -33,22 +34,29 @@ export class PokemonOverviewComponent {
   highestBid = signal<StockTransaction | null>(null);
   availableShares = signal<number | null>(null);
 
+  pendingTransaction = signal<StockTransaction | null>(null);
+  isLoadingPendingTransaction = signal(true);
+
   constructor(
     private overviewService: PokemonOverviewService,
     private userService: UserService,
+    private transactionService: TransactionService,
   ) {
     effect(() => {
+      const pokemonKey = this.pokemonKey();
+
       this.isloading.set(true);
+      this.isLoadingPendingTransaction.set(true);
       this.userService
         .getCurrentUser()
         .pipe(
           tap((user) => this.user.set(user)),
-          mergeMap(() =>
-            this.overviewService.getPokemonOverviewForUser({
-              username: this.user().username,
-              pokemonKey: this.pokemonKey(),
-            }),
-          ),
+          mergeMap(() => {
+            return this.overviewService.getPokemonOverviewForUser({
+              ownerUsername: this.user().username,
+              pokemonKey,
+            });
+          }),
         )
         .subscribe((overview: PokemonOverview) => {
           this.pokemon.set(overview.pokemon);
@@ -56,6 +64,10 @@ export class PokemonOverviewComponent {
           this.lowestAsk.set(overview.lowestAsk);
           this.highestBid.set(overview.highestBid);
           this.availableShares.set(overview.availableShares);
+
+          this.pendingTransaction.set(overview.pendingTransaction);
+          this.isLoadingPendingTransaction.set(false);
+
           this.isloading.set(false);
         });
     });
@@ -77,5 +89,25 @@ export class PokemonOverviewComponent {
     } else {
       return 0;
     }
+  }
+
+  cancelTransaction() {
+    if (!this.pendingTransaction()) {
+      return;
+    }
+
+    this.isLoadingPendingTransaction.set(true);
+    this.transactionService
+      .cancelTransaction(this.pendingTransaction()!)
+      .subscribe({
+        next: (wasSuccessful) => {
+          if (wasSuccessful) {
+            this.pendingTransaction.set(null);
+          }
+        },
+        complete: () => {
+          this.isLoadingPendingTransaction.set(false);
+        },
+      });
   }
 }

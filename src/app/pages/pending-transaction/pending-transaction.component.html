@@ -13,13 +13,18 @@
         <h3>Your Current {{ pendingTransaction()!.type | titlecase }}</h3>
         <p>
           Price per share:
-          <app-poke-dollars [amount]="pendingTransaction()!.sharePricePokeDollars" />
+          <app-poke-dollars
+            [amount]="pendingTransaction()!.sharePricePokeDollars"
+          />
         </p>
         <p>Shares: {{ pendingTransaction()?.shareCount }}</p>
         <p>
-          Total cost: <app-poke-dollars [amount]="pendingTransaction()!.totalCostPokeDollars" />
+          Total cost:
+          <app-poke-dollars
+            [amount]="pendingTransaction()!.totalCostPokeDollars"
+          />
         </p>
-        <button (click)="cancelTransaction()">Cancel</button>
+        <button (click)="cancelTransaction.emit()">Cancel</button>
       }
     </div>
   } @else {

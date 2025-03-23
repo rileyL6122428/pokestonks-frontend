@@ -130,6 +130,7 @@ export class MockApi {
         transaction.type === 'bid' &&
         transaction.status === 'pending',
     );
+
     const pendingTransaction = mockDatabase.stockTransactionsTable.selectOne(
       (transaction) =>
         transaction.pokemonKey === pokemonKey &&
@@ -141,7 +142,7 @@ export class MockApi {
     const positionsInPokemon = mockDatabase.positionsTable.select(
       (position) => position.pokemonKey === pokemonKey,
     );
-    debugger;
+
     const availableShares =
       pokemon.totalShares -
       positionsInPokemon.reduce(
