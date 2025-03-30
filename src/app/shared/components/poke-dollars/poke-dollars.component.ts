@@ -8,5 +8,9 @@ import { CurrencyPipe } from '@angular/common';
   styleUrl: './poke-dollars.component.scss',
 })
 export class PokeDollarsComponent {
-  amount = input<number>(0);
+  amount = input<number | null | undefined>(0);
+
+  get canRender() {
+    return typeof this.amount() === 'number' && this.amount() !== null;
+  }
 }

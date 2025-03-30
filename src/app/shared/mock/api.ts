@@ -5,6 +5,8 @@ import { User } from '../model/user';
 import { StockTransaction } from '../model/stock-transaction';
 import { Pokemon } from '../model/pokemon';
 import { PokemonOverview } from '../model/pokemon-overview';
+import { PositionQuote, Portfolio } from '../model/portfolio';
+import { Position } from '../model/position';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +14,7 @@ import { PokemonOverview } from '../model/pokemon-overview';
 export class MockApi {
   call(params: OperationParams): Observable<any> {
     const { operationName, payload } = params;
-    const operation = this.routeRequest({ operationName });
+    const operation = this.routeRequest({ operationName }).bind(this);
     return of(operation(payload)).pipe(delay(250 + 1500 * Math.random()));
   }
 
@@ -33,6 +35,8 @@ export class MockApi {
         return this.searchPokemon;
       case 'getPokemonOverviewForUser':
         return this.getPokemonOverviewForUser;
+      case 'getCurrentUserPortfolio':
+        return this.getCurrentUserPortfolio;
       default:
         throw new Error(`Unknown operation: ${operationName}`);
     }
@@ -159,6 +163,66 @@ export class MockApi {
       pendingTransaction,
       availableShares,
     });
+  }
+
+  getCurrentUserPortfolio(): Portfolio {
+    const currentUser = this.getCurrentUser();
+
+    const ownedPositions = mockDatabase.positionsTable.select(
+      (position) => position.ownerUsername === currentUser.username,
+    );
+    const ownedPositionsByPokemonKey: Record<string, Position> = {};
+    ownedPositions.forEach((position) => {
+      ownedPositionsByPokemonKey[position.pokemonKey] = position;
+    });
+
+    const stakedPokemonKeys = ownedPositions.reduce(
+      (acc, position) => acc.add(position.pokemonKey),
+      new Set<string>(),
+    );
+
+    const stakedPokemon = mockDatabase.pokemonTable.select((pokemon) =>
+      stakedPokemonKeys.has(pokemon.key),
+    );
+
+    const lastTransactions = mockDatabase.stockTransactionsTable
+      .select(
+        (transaction) =>
+          transaction.status === 'completed' &&
+          stakedPokemonKeys.has(transaction.pokemonKey),
+      )
+      .reduce((acc: Map<string, StockTransaction>, transaction) => {
+        const existingTransaction = acc.get(transaction.pokemonKey);
+
+        const isNewerTransaction =
+          !existingTransaction ||
+          (transaction.completedDate &&
+            existingTransaction.completedDate &&
+            transaction.completedDate > existingTransaction.completedDate);
+
+        if (isNewerTransaction) {
+          acc.set(transaction.pokemonKey, transaction);
+        }
+        return acc;
+      }, new Map<string, StockTransaction>());
+
+    const positionsByPokemonKey: Record<string, PositionQuote> = stakedPokemon
+      .map((pokemon) => {
+        const position = ownedPositionsByPokemonKey[pokemon.key];
+        const lastTransaction = lastTransactions.get(pokemon.key);
+
+        return new PositionQuote({
+          pokemon,
+          ownedSharesCount: position?.ownedSharesCount || 0,
+          sharePricePokeDollars: lastTransaction?.sharePricePokeDollars || 0,
+        });
+      })
+      .reduce((acc: Record<string, PositionQuote>, position) => {
+        acc[position.pokemon.key] = position;
+        return acc;
+      }, {});
+
+    return new Portfolio({ positionsByPokemonKey });
   }
 }
 

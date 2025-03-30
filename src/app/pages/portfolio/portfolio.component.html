@@ -1,0 +1,54 @@
+<h2>Portfolio</h2>
+
+<div>
+  @if (portfolio()) {
+    <p>
+      Total value:
+      <app-poke-dollars
+        [amount]="portfolio()?.totalValuePokeDollars"
+      ></app-poke-dollars>
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Pokemon</th>
+          <th>% total value</th>
+          <th>Value</th>
+          <th>Shares</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (
+          position of portfolio()?.positionsByTotalDesc;
+          track position.pokemon.key
+        ) {
+          <tr>
+            <td>{{ position.pokemon.name }}</td>
+            <td>
+              {{
+                (position.totalValuePokeDollars /
+                  portfolio()!.totalValuePokeDollars) *
+                  100 | number: "1.1-1"
+              }}%
+            </td>
+            <td>
+              <app-poke-dollars
+                [amount]="position.totalValuePokeDollars"
+              ></app-poke-dollars>
+            </td>
+            <td>{{ position.ownedSharesCount }}</td>
+            <td>
+              <app-poke-dollars
+                [amount]="position.sharePricePokeDollars"
+              ></app-poke-dollars>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <app-loader></app-loader>
+  }
+</div>

@@ -7,8 +7,10 @@
       Pokestonks
     </a>
   </h1>
-  <div>
+  <div id="user-and-profile">
     <p>Welcome, {{ currentUser().username }}</p>
+    <p>|</p>
+    <p><a [routerLink]="['portfolio']">Portfolio</a></p>
   </div>
 </div>
 

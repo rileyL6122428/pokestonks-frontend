@@ -91,6 +91,16 @@ export class MockDatabase {
         ownerUsername: 'pryce',
         type: 'ask',
         status: 'completed',
+        completedDate: new Date('2023-10-01T00:00:00Z'),
+      }),
+      new StockTransaction({
+        pokemonKey: '3-default',
+        shareCount: 100,
+        sharePricePokeDollars: 85,
+        ownerUsername: 'pryce',
+        type: 'ask',
+        status: 'completed',
+        completedDate: new Date('2023-10-01T00:00:00Z'),
       }),
       new StockTransaction({
         pokemonKey: '898-ice-rider',
@@ -145,6 +155,11 @@ export class MockDatabase {
       new Position({
         pokemonKey: '898-ice-rider',
         ownedSharesCount: 200,
+        ownerUsername: 'red',
+      }),
+      new Position({
+        pokemonKey: '3-default',
+        ownedSharesCount: 100,
         ownerUsername: 'red',
       }),
       new Position({

@@ -2,3 +2,11 @@
   display: flex;
   justify-content: space-between;
 }
+
+#user-and-profile {
+  display: flex;
+
+  p {
+    margin-left: 10px;
+  }
+}

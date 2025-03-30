@@ -1,9 +1,17 @@
 export class Position {
+  // UNIQUE KEY
+  // pokemonKey + ownerUsername
   pokemonKey: string;
-  ownedSharesCount: number;
   ownerUsername: string;
+  ownedSharesCount: number;
 
-  constructor(params: PositionParams = { pokemonKey: '', ownedSharesCount: 0, ownerUsername: '' }) {
+  constructor(
+    params: PositionParams = {
+      pokemonKey: '',
+      ownedSharesCount: 0,
+      ownerUsername: '',
+    },
+  ) {
     this.pokemonKey = params.pokemonKey;
     this.ownedSharesCount = params.ownedSharesCount;
     this.ownerUsername = params.ownerUsername;

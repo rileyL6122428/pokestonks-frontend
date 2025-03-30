@@ -1,3 +1,9 @@
-<span
-  >{{ amount() | currency: "" : "" : "1.0-0" }}<img src="poke-dollar-v2.webp" width="12px"
-/></span>
+@if (canRender) {
+  <span
+    >{{ amount() | currency: "" : "" : "1.0-0"
+    }}<img src="poke-dollar-v2.webp" width="12px"
+  /></span>
+
+} @else {
+  <span><i>Unknown</i></span>
+}

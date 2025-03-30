@@ -51,6 +51,7 @@ export class PokemonOverviewComponent {
 
       this.isloadingMetrics.set(true);
       this.isLoadingPendingTransaction.set(true);
+      this.isLoadingPosition.set(true);
       this.userService
         .getCurrentUser()
         .pipe(

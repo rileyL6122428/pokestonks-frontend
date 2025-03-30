@@ -8,6 +8,7 @@ export class StockTransaction {
   ownerUsername: string;
   type: 'bid' | 'ask';
   status: 'pending' | 'completed' | 'cancelled';
+  completedDate?: Date;
 
   constructor(params: StockTransactionParams) {
     this.pokemonKey = params.pokemonKey;
@@ -16,6 +17,7 @@ export class StockTransaction {
     this.ownerUsername = params.ownerUsername;
     this.type = params.type;
     this.status = params.status;
+    this.completedDate = params.completedDate;
   }
 
   get totalCostPokeDollars() {
@@ -30,4 +32,5 @@ export interface StockTransactionParams {
   ownerUsername: string;
   type: 'bid' | 'ask';
   status: 'pending' | 'completed' | 'cancelled';
+  completedDate?: Date;
 }
