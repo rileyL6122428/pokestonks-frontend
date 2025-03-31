@@ -25,9 +25,11 @@ export class Portfolio {
   private positionsByPokemonKey: Record<string, PositionQuote> = {};
   private _positionsByTotalDesc: PositionQuote[] | null = null;
   private _totalValuePokeDollars: number | null = null;
+  readonly cashPokeDollars: number;
 
   constructor(params: PortfolioParams) {
     this.positionsByPokemonKey = params.positionsByPokemonKey;
+    this.cashPokeDollars = params.cashPokeDollars;
   }
 
   get positionsByTotalDesc(): PositionQuote[] {
@@ -55,4 +57,5 @@ export class Portfolio {
 
 export interface PortfolioParams {
   positionsByPokemonKey: Record<string, PositionQuote>;
+  cashPokeDollars: number;
 }

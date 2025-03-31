@@ -1,7 +1,11 @@
 import { NgClass } from '@angular/common';
 import { Component, Input, input, output, signal } from '@angular/core';
 
-export type PokedexModalResult = 'successful' | 'failed' | 'inProgress' | 'notStarted';
+export type PokedexModalResult =
+  | 'successful'
+  | 'failed'
+  | 'inProgress'
+  | 'notStarted';
 
 @Component({
   selector: 'app-pokedex-modal',
@@ -12,6 +16,7 @@ export type PokedexModalResult = 'successful' | 'failed' | 'inProgress' | 'notSt
 export class PokedexModalComponent {
   _result = signal<PokedexModalResult>('notStarted');
   private inProgressStartTime: number | null = null;
+  successAnimationComplete = output<void>();
 
   @Input()
   set result(result: PokedexModalResult) {
@@ -23,9 +28,15 @@ export class PokedexModalComponent {
       this._result.set(result);
     } else {
       // Add a delay to the result to line up the animation, which runs a full cycle every 1 second
-      const timeElapsed = this.inProgressStartTime ? Date.now() - this.inProgressStartTime : 0;
-      const waitTime = (timeElapsed % 1000) + (timeElapsed < 2000 ? 1000 : 0) - 2;
+      const timeElapsed = this.inProgressStartTime
+        ? Date.now() - this.inProgressStartTime
+        : 0;
+      const waitTime =
+        (timeElapsed % 1000) + (timeElapsed < 2000 ? 1000 : 0) - 2;
       setTimeout(() => this._result.set(result), waitTime);
+      setTimeout(() => {
+        this.successAnimationComplete.emit();
+      }, waitTime + 2000);
     }
   }
 

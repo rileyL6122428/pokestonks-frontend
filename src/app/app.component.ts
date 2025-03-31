@@ -19,7 +19,9 @@ export class AppComponent {
   searchUpdate = new BehaviorSubject<string>('');
   private searchSub: Subscription = new Subscription();
   searchResults = signal<Pokemon[]>([]);
-  currentUser = signal<User>(new User({ username: '' }));
+  currentUser = signal<User>(
+    new User({ username: '', freeCashPokeDollars: 0 }),
+  );
 
   constructor(
     private pokemonService: PokemonService,

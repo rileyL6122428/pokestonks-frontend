@@ -10,8 +10,9 @@ export class MockDatabaseTable<T> {
     this.rows.push(...rows);
   }
 
-  delete(predicate: (row: T) => boolean) {
+  delete(predicate: (row: T) => boolean): number {
     this.rows = this.rows.filter((row) => !predicate(row));
+    return this.rows.length;
   }
 
   update(predicate: (row: T) => boolean, updater: (row: T) => T): number {
@@ -56,71 +57,66 @@ export class MockDatabase {
         pokemonKey: '3-default',
         shareCount: 100,
         sharePricePokeDollars: 100,
-        ownerUsername: 'red',
-        type: 'bid',
-        status: 'pending',
+        buyerUsername: 'red',
       }),
       new StockTransaction({
         pokemonKey: '898-ice-rider',
         shareCount: 100,
         sharePricePokeDollars: 105,
-        ownerUsername: 'red',
-        type: 'ask',
-        status: 'pending',
+        sellerUsername: 'red',
       }),
       new StockTransaction({
         pokemonKey: '898-ice-rider',
         shareCount: 200,
         sharePricePokeDollars: 105,
-        ownerUsername: 'oak',
-        type: 'ask',
-        status: 'pending',
+        sellerUsername: 'oak',
       }),
       new StockTransaction({
         pokemonKey: '898-ice-rider',
         shareCount: 100,
         sharePricePokeDollars: 106,
-        ownerUsername: 'lorelei',
-        type: 'ask',
-        status: 'pending',
+        sellerUsername: 'lorelei',
       }),
       new StockTransaction({
         pokemonKey: '898-ice-rider',
         shareCount: 100,
         sharePricePokeDollars: 100,
-        ownerUsername: 'pryce',
-        type: 'ask',
-        status: 'completed',
+        buyerUsername: 'pryce',
+        sellerUsername: 'lorelei',
         completedDate: new Date('2023-10-01T00:00:00Z'),
       }),
       new StockTransaction({
         pokemonKey: '3-default',
         shareCount: 100,
         sharePricePokeDollars: 85,
-        ownerUsername: 'pryce',
-        type: 'ask',
-        status: 'completed',
+        sellerUsername: 'pryce',
+        buyerUsername: 'lorelei',
         completedDate: new Date('2023-10-01T00:00:00Z'),
       }),
       new StockTransaction({
         pokemonKey: '898-ice-rider',
         shareCount: 100,
         sharePricePokeDollars: 98,
-        ownerUsername: 'wulfric',
-        type: 'bid',
-        status: 'pending',
+        sellerUsername: 'wulfric',
       }),
     ]);
 
     this.usersTable.insert([
       new User({
         username: 'red',
+        freeCashPokeDollars: 50000,
       }),
       new User({
         username: 'oak',
+        freeCashPokeDollars: 50000,
       }),
       new User({
         username: 'lorelei',
+        freeCashPokeDollars: 50000,
+      }),
+      new User({
+        username: 'wulfric',
+        freeCashPokeDollars: 50000,
       }),
     ]);
 
@@ -152,6 +148,21 @@ export class MockDatabase {
     ]);
 
     this.positionsTable.insert([
+      new Position({
+        pokemonKey: '898-ice-rider',
+        ownedSharesCount: 200,
+        ownerUsername: 'wulfric',
+      }),
+      new Position({
+        pokemonKey: '898-ice-rider',
+        ownedSharesCount: 200,
+        ownerUsername: 'oak',
+      }),
+      new Position({
+        pokemonKey: '898-ice-rider',
+        ownedSharesCount: 200,
+        ownerUsername: 'lorelei',
+      }),
       new Position({
         pokemonKey: '898-ice-rider',
         ownedSharesCount: 200,

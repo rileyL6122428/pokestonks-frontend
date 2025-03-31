@@ -3,7 +3,13 @@
 <div>
   @if (portfolio()) {
     <p>
-      Total value:
+      Free cash:
+      <app-poke-dollars
+        [amount]="portfolio()?.cashPokeDollars"
+      ></app-poke-dollars>
+    </p>
+    <p>
+      Stock valuation:
       <app-poke-dollars
         [amount]="portfolio()?.totalValuePokeDollars"
       ></app-poke-dollars>

@@ -26,7 +26,7 @@ import { Position } from '../../shared/model/position';
 })
 export class PokemonOverviewComponent {
   pokemonKey = input<string>('');
-  user = signal<User>(new User({ username: '' }));
+  user = signal<User>(new User({ username: '', freeCashPokeDollars: 0 }));
 
   isloadingMetrics = signal(true);
   pokemon = signal<Pokemon>(new Pokemon());

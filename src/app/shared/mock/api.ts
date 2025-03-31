@@ -21,10 +21,10 @@ export class MockApi {
   routeRequest(params: { operationName: string }) {
     const { operationName } = params;
     switch (operationName) {
-      case 'getTransactionsForPokemon':
-        return this.getTransactionsForPokemon;
-      case 'getTransactionsForOwnerByPokemon':
-        return this.getTransactionsForOwnerByPokemon;
+      case 'getAsksForPokemon':
+        return this.getAsksForPokemon;
+      case 'getBidsForPokemon':
+        return this.getBidsForPokemon;
       case 'getCurrentUser':
         return this.getCurrentUser;
       case 'cancelTransaction':
@@ -37,49 +37,36 @@ export class MockApi {
         return this.getPokemonOverviewForUser;
       case 'getCurrentUserPortfolio':
         return this.getCurrentUserPortfolio;
+      case 'acceptAsk':
+        return this.acceptAsk;
       default:
         throw new Error(`Unknown operation: ${operationName}`);
     }
   }
 
-  getTransactionsForOwnerByPokemon(params: {
-    ownerUsername: string;
-    pokemonKey: string;
-    status: string;
-  }): StockTransaction[] {
-    const { ownerUsername, pokemonKey, status } = params;
+  getAsksForPokemon(params: { pokemonKey: string }): StockTransaction[] {
+    const { pokemonKey } = params;
     const matchedTransactions = mockDatabase.stockTransactionsTable.select(
       (transaction) =>
-        transaction.ownerUsername === ownerUsername &&
-        transaction.pokemonKey === pokemonKey &&
-        transaction.status === status,
+        transaction.pokemonKey === pokemonKey && transaction.isAsk,
     );
-
     return matchedTransactions;
   }
-
-  getTransactionsForPokemon(params: {
-    pokemonKey: string;
-    status: string;
-    type: string;
-  }): StockTransaction[] {
-    const { pokemonKey, status, type } = params;
+  getBidsForPokemon(params: { pokemonKey: string }): StockTransaction[] {
+    const { pokemonKey } = params;
     const matchedTransactions = mockDatabase.stockTransactionsTable.select(
       (transaction) =>
-        transaction.pokemonKey === pokemonKey &&
-        transaction.status === status &&
-        transaction.type === type,
+        transaction.pokemonKey === pokemonKey && transaction.isBid,
     );
-
     return matchedTransactions;
   }
 
   cancelTransaction(transaction: StockTransaction): boolean {
-    const rowsUpdatedCount = mockDatabase.stockTransactionsTable.update(
+    const deletedCount = mockDatabase.stockTransactionsTable.delete(
       (row) => row === transaction,
-      (row) => new StockTransaction({ ...row, status: 'cancelled' }),
     );
-    return !!rowsUpdatedCount;
+
+    return !!deletedCount;
   }
 
   getCurrentUser(): User {
@@ -117,30 +104,58 @@ export class MockApi {
         position.ownerUsername === ownerUsername &&
         position.pokemonKey === pokemonKey,
     );
-    const lastTransaction = mockDatabase.stockTransactionsTable.selectOne(
-      (transaction) =>
-        transaction.pokemonKey === pokemonKey &&
-        transaction.status === 'completed',
-    )!;
-    const lowestAsk = mockDatabase.stockTransactionsTable.selectOne(
-      (transaction) =>
-        transaction.pokemonKey === pokemonKey &&
-        transaction.type === 'ask' &&
-        transaction.status === 'pending',
-    );
-    const highestBid = mockDatabase.stockTransactionsTable.selectOne(
-      (transaction) =>
-        transaction.pokemonKey === pokemonKey &&
-        transaction.type === 'bid' &&
-        transaction.status === 'pending',
-    );
+    const lastTransaction = mockDatabase.stockTransactionsTable
+      .select(
+        (transaction) =>
+          transaction.pokemonKey === pokemonKey && transaction.isCompleted,
+      )
+      .reduce(
+        (acc: StockTransaction | null, transaction: StockTransaction) =>
+          !acc ||
+          (transaction.completedDate &&
+            transaction.completedDate >
+              (acc as StockTransaction)!.completedDate!)
+            ? transaction
+            : (acc as StockTransaction),
+        null,
+      ) as StockTransaction | null;
+
+    const lowestAsk = mockDatabase.stockTransactionsTable
+      .select(
+        (transaction) =>
+          transaction.pokemonKey === pokemonKey && transaction.isAsk,
+      )
+      .reduce(
+        (acc: StockTransaction | null, transaction: StockTransaction) =>
+          !acc ||
+          transaction.sharePricePokeDollars <
+            (acc as StockTransaction)!.sharePricePokeDollars
+            ? transaction
+            : (acc as StockTransaction),
+        null,
+      );
+
+    const highestBid = mockDatabase.stockTransactionsTable
+      .select(
+        (transaction) =>
+          transaction.pokemonKey === pokemonKey && transaction.isBid,
+      )
+      .reduce(
+        (acc: StockTransaction | null, transaction: StockTransaction) =>
+          !acc ||
+          transaction.sharePricePokeDollars >
+            (acc as StockTransaction)!.sharePricePokeDollars
+            ? transaction
+            : (acc as StockTransaction),
+        null,
+      );
 
     const pendingTransaction = mockDatabase.stockTransactionsTable.selectOne(
       (transaction) =>
         transaction.pokemonKey === pokemonKey &&
-        transaction.status === 'pending' &&
-        (transaction.type === 'bid' || transaction.type === 'ask') &&
-        transaction.ownerUsername === ownerUsername,
+        transaction.isOpen &&
+        (transaction.buyerUsername === ownerUsername ||
+          transaction.sellerUsername === ownerUsername),
     );
 
     const positionsInPokemon = mockDatabase.positionsTable.select(
@@ -188,7 +203,7 @@ export class MockApi {
     const lastTransactions = mockDatabase.stockTransactionsTable
       .select(
         (transaction) =>
-          transaction.status === 'completed' &&
+          transaction.isCompleted &&
           stakedPokemonKeys.has(transaction.pokemonKey),
       )
       .reduce((acc: Map<string, StockTransaction>, transaction) => {
@@ -222,7 +237,115 @@ export class MockApi {
         return acc;
       }, {});
 
-    return new Portfolio({ positionsByPokemonKey });
+    return new Portfolio({
+      positionsByPokemonKey,
+      cashPokeDollars: currentUser.freeCashPokeDollars,
+    });
+  }
+
+  acceptAsk(params: { pokemonKey: string; askOwnerUsername: string }) {
+    const { pokemonKey, askOwnerUsername } = params;
+
+    const askTransaction = mockDatabase.stockTransactionsTable.selectOne(
+      (transaction) =>
+        transaction.pokemonKey === pokemonKey &&
+        transaction.isAsk &&
+        transaction.sellerUsername === askOwnerUsername,
+    );
+
+    const buyer = this.getCurrentUser();
+    const seller = mockDatabase.usersTable.selectOne(
+      (user) => user.username === askOwnerUsername,
+    );
+
+    if (
+      !buyer ||
+      !seller ||
+      !askTransaction ||
+      buyer.freeCashPokeDollars < askTransaction.totalCostPokeDollars
+    ) {
+      return false;
+    }
+
+    mockDatabase.stockTransactionsTable.update(
+      (transaction) => transaction === askTransaction,
+      (transaction) =>
+        new StockTransaction({
+          ...transaction,
+          buyerUsername: buyer.username,
+          completedDate: new Date(),
+        } as StockTransaction),
+    );
+
+    mockDatabase.usersTable.update(
+      (user) => user.username === buyer.username,
+      (user) =>
+        new User({
+          ...user,
+          freeCashPokeDollars:
+            user.freeCashPokeDollars - askTransaction.totalCostPokeDollars,
+        }),
+    );
+    mockDatabase.usersTable.update(
+      (user) => user.username === seller.username,
+      (user) =>
+        new User({
+          ...user,
+          freeCashPokeDollars:
+            user.freeCashPokeDollars + askTransaction.totalCostPokeDollars,
+        }),
+    );
+    mockDatabase.positionsTable.update(
+      (position) =>
+        position.pokemonKey === pokemonKey &&
+        position.ownerUsername === seller.username,
+      (position) =>
+        new Position({
+          ...position,
+          ownedSharesCount:
+            position.ownedSharesCount - askTransaction.shareCount,
+        }),
+    );
+    const sellerUpdatedPosition = mockDatabase.positionsTable.selectOne(
+      (position) =>
+        position.pokemonKey === pokemonKey &&
+        position.ownerUsername === seller.username,
+    );
+    if (sellerUpdatedPosition && sellerUpdatedPosition.ownedSharesCount === 0) {
+      mockDatabase.positionsTable.delete(
+        (position) =>
+          position.pokemonKey === pokemonKey &&
+          position.ownerUsername === seller.username,
+      );
+    }
+
+    const buyersCurrentPosition = mockDatabase.positionsTable.selectOne(
+      (position) =>
+        position.pokemonKey === pokemonKey &&
+        position.ownerUsername === buyer.username,
+    );
+    if (buyersCurrentPosition) {
+      mockDatabase.positionsTable.update(
+        (position) =>
+          position.pokemonKey === pokemonKey &&
+          position.ownerUsername === buyer.username,
+        (position) =>
+          new Position({
+            ...position,
+            ownedSharesCount:
+              position.ownedSharesCount + askTransaction.shareCount,
+          }),
+      );
+    } else {
+      mockDatabase.positionsTable.insert([
+        new Position({
+          pokemonKey,
+          ownerUsername: buyer.username,
+          ownedSharesCount: askTransaction.shareCount,
+        }),
+      ]);
+    }
+    return true;
   }
 }
 

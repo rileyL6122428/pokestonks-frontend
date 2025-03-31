@@ -17,12 +17,17 @@
       </select>
     </div>
     <ul>
-      @for (ask of asks(); track ask.ownerUsername) {
+      @for (ask of asks(); track ask.sellerUsername) {
         <li class="ask-card">
-          <p>Price per share: <app-poke-dollars [amount]="ask.sharePricePokeDollars" /></p>
+          <p>
+            Price per share:
+            <app-poke-dollars [amount]="ask.sharePricePokeDollars" />
+          </p>
           <p>Total shares: {{ ask.shareCount }}</p>
-          <p>Total cost: <app-poke-dollars [amount]="ask.totalCostPokeDollars" /></p>
-          <p>Owner: {{ ask.ownerUsername }}</p>
+          <p>
+            Total cost: <app-poke-dollars [amount]="ask.totalCostPokeDollars" />
+          </p>
+          <p>Owner: {{ ask.sellerUsername }}</p>
           <button (click)="selectedAsk.set(ask)">Buy</button>
         </li>
       }
@@ -31,46 +36,62 @@
 </section>
 
 @if (selectedAsk()) {
-  <app-pokedex-modal [result]="buyResult()">
+  <app-pokedex-modal
+    [result]="buyResult()"
+    (successAnimationComplete)="onSuccessAnimationComplete()"
+  >
     @if (buyResult() !== "failed") {
       <h2>Confirm Buy</h2>
       <p>
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum."
       </p>
       <p>
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum."
       </p>
       <p>
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum."
       </p>
       <p>
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-        cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+        mollit anim id est laborum."
       </p>
       <div class="modal-button-group">
-        <button class="modal-confirm-button" (click)="buySelected()">Confirm</button>
-        <button class="modal-confirm-button" (click)="selectedAsk.set(null)">Cancel</button>
+        <button class="modal-confirm-button" (click)="buySelected()">
+          Confirm
+        </button>
+        <button class="modal-confirm-button" (click)="selectedAsk.set(null)">
+          Cancel
+        </button>
       </div>
     } @else {
       <h2>Buy Failed</h2>
       <p>{{ pokemon().name }} got away!</p>
       <p>
-        Ask no longer available. Please refresh the page to see the latest asks for this Pokemon.
+        Ask no longer available. Please refresh the page to see the latest asks
+        for this Pokemon.
       </p>
       <div class="modal-button-group">
         <button
