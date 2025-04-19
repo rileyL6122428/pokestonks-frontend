@@ -1,3 +1,7 @@
+export const SPECIAL_USERNAMES = {
+  INVESTMENT_BANKER: 'investment_banker',
+};
+
 export class User {
   username: string;
   freeCashPokeDollars: number;
