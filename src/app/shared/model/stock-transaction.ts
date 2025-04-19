@@ -1,6 +1,3 @@
-export type StockTransactionType = 'bid' | 'ask';
-export type StockTransactionStatus = 'pending' | 'completed' | 'cancelled';
-
 export class StockTransaction {
   pokemonKey: string;
   shareCount: number;
