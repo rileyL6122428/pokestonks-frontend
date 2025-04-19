@@ -28,4 +28,14 @@ export class PendingTransactionComponent {
   gotoSell() {
     console.log(`Ask started for ${this.pokemon().name}`);
   }
+
+  get pendingTransactionType(): string {
+    let type = '';
+    if (this.pendingTransaction()?.isAsk) {
+      type = 'ask';
+    } else if (this.pendingTransaction()?.isAsk) {
+      type = 'bid';
+    }
+    return type;
+  }
 }

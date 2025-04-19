@@ -10,7 +10,7 @@
 
     <div id="current-transaction">
       @if (pendingTransaction()) {
-        <h3>Your Current {{ pendingTransaction()!.type | titlecase }}</h3>
+        <h3>Your Current {{ pendingTransactionType | titlecase }}</h3>
         <p>
           Price per share:
           <app-poke-dollars
