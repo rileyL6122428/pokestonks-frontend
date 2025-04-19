@@ -2,9 +2,9 @@
   @if (loading()) {
     <app-loader />
   }
-  @if (!loading() && position()) {
+  @if (!loading()) {
     <h3>Your Current Position</h3>
-    <p>Owned shares: {{ position()?.ownedSharesCount }}</p>
+    <p>Owned shares: {{ position()?.ownedSharesCount || 0 }}</p>
     <p>
       Valuation:
       @if (valuation !== null) {

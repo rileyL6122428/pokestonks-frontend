@@ -3,8 +3,15 @@
     @if (!pendingTransaction()) {
       <div id="start-transaction">
         <h3>Start a transaction</h3>
-        <button (click)="gotoBuy()">Buy</button>
-        <button (click)="gotoSell()">Sell</button>
+        @if (canBuy()) {
+          <button (click)="gotoBuy()">Buy</button>
+        }
+        @if (canSell()) {
+          <button (click)="gotoSell()">Sell</button>
+        }
+        @if (!canBuy() && !canSell()) {
+          <p>This stock cannot be bought or sold.</p>
+        }
       </div>
     }
 

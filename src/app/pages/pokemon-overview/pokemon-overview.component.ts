@@ -33,13 +33,18 @@ export class PokemonOverviewComponent {
   lastTransaction = signal<StockTransaction | null>(null);
   lowestAsk = signal<StockTransaction | null>(null);
   highestBid = signal<StockTransaction | null>(null);
-  availableShares = signal<number | null>(null);
+  availableShares = signal<number>(0);
 
   isLoadingPendingTransaction = signal(true);
   pendingTransaction = signal<StockTransaction | null>(null);
 
   isLoadingPosition = signal(true);
-  position = signal<Position | null>(null);
+  position = signal<Position>(
+    Position.empty({
+      pokemonKey: '',
+      ownerUsername: '',
+    }),
+  );
 
   constructor(
     private overviewService: PokemonOverviewService,

@@ -15,9 +15,9 @@ export class PokemonPositionComponent {
   position = input<Position | null>(null);
   lastTransaction = input<StockTransaction | null>(null);
 
-  get valuation(): number | null {
+  get valuation(): number {
     if (this.position() === null || this.lastTransaction() === null) {
-      return null;
+      return 0;
     }
 
     return (

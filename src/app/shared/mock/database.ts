@@ -2,6 +2,7 @@ import { Pokemon } from '../model/pokemon';
 import { Position } from '../model/position';
 import { StockTransaction } from '../model/stock-transaction';
 import { User } from '../model/user';
+import { NoPurchasesSeed } from './database-seed/no-purchases';
 
 export class MockDatabaseTable<T> {
   private rows: T[] = [];
@@ -183,4 +184,5 @@ export class MockDatabase {
 }
 
 export const mockDatabase = new MockDatabase();
-mockDatabase.seed();
+// mockDatabase.seed();
+new NoPurchasesSeed().applyTo(mockDatabase);

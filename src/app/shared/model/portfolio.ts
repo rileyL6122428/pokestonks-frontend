@@ -53,6 +53,10 @@ export class Portfolio {
     }
     return this._totalValuePokeDollars;
   }
+
+  get hasStocks(): boolean {
+    return this.positionsByTotalDesc.length > 0;
+  }
 }
 
 export interface PortfolioParams {

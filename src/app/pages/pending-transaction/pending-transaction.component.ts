@@ -16,6 +16,8 @@ export class PendingTransactionComponent {
   pokemon = input<Pokemon>(new Pokemon());
   pendingTransaction = input<StockTransaction | null>(null);
   isloading = input(true);
+  canSell = input(false);
+  canBuy = input(false);
 
   cancelTransaction = output();
 

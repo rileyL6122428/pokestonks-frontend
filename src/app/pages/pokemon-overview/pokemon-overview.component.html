@@ -60,6 +60,8 @@
     [pokemon]="pokemon()"
     [pendingTransaction]="pendingTransaction()"
     [isloading]="isLoadingPendingTransaction()"
+    [canSell]="position().ownedSharesCount > 0"
+    [canBuy]="availableShares() > 0"
     (cancelTransaction)="cancelTransaction()"
   ></app-pending-transaction>
   <app-pokemon-position

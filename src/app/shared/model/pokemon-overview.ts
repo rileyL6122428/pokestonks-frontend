@@ -1,25 +1,25 @@
 import { Pokemon } from './pokemon';
-import { Position } from './position';
+import { EmptyPositionParams, Position } from './position';
 import { StockTransaction } from './stock-transaction';
 
 export class PokemonOverview {
   readonly pokemon: Pokemon;
-  readonly position: Position | null;
+  readonly position: Position;
   readonly pendingTransaction: StockTransaction | null;
   readonly lastTransaction: StockTransaction | null;
   readonly lowestAsk: StockTransaction | null;
   readonly highestBid: StockTransaction | null;
-  readonly availableShares: number | null;
+  readonly availableShares: number;
 
-  static empty(): PokemonOverview {
+  static empty(params: EmptyPositionParams): PokemonOverview {
     return new PokemonOverview({
       pokemon: new Pokemon(),
-      position: null,
+      position: Position.empty(params),
       pendingTransaction: null,
       lastTransaction: null,
       lowestAsk: null,
       highestBid: null,
-      availableShares: null,
+      availableShares: 0,
     });
   }
 
@@ -36,10 +36,10 @@ export class PokemonOverview {
 
 export interface PokemonOverviewParams {
   pokemon: Pokemon;
-  position: Position | null;
+  position: Position;
   pendingTransaction: StockTransaction | null;
   lastTransaction: StockTransaction | null;
   lowestAsk: StockTransaction | null;
   highestBid: StockTransaction | null;
-  availableShares: number | null;
+  availableShares: number;
 }

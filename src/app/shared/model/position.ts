@@ -5,6 +5,13 @@ export class Position {
   ownerUsername: string;
   ownedSharesCount: number;
 
+  static empty(params: EmptyPositionParams): Position {
+    return new Position({
+      ...params,
+      ownedSharesCount: 0,
+    });
+  }
+
   constructor(
     params: PositionParams = {
       pokemonKey: '',
@@ -18,8 +25,11 @@ export class Position {
   }
 }
 
-export interface PositionParams {
+export interface EmptyPositionParams {
   pokemonKey: string;
-  ownedSharesCount: number;
   ownerUsername: string;
+}
+
+export interface PositionParams extends EmptyPositionParams {
+  ownedSharesCount: number;
 }

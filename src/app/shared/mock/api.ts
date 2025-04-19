@@ -99,11 +99,12 @@ export class MockApi {
     const pokemon = mockDatabase.pokemonTable.selectOne(
       (pokemon) => pokemon.key === pokemonKey,
     )!;
-    const position = mockDatabase.positionsTable.selectOne(
-      (position) =>
-        position.ownerUsername === ownerUsername &&
-        position.pokemonKey === pokemonKey,
-    );
+    const position =
+      mockDatabase.positionsTable.selectOne(
+        (position) =>
+          position.ownerUsername === ownerUsername &&
+          position.pokemonKey === pokemonKey,
+      ) || Position.empty(params);
     const lastTransaction = mockDatabase.stockTransactionsTable
       .select(
         (transaction) =>
